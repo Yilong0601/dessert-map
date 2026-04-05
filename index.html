@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>甜點地圖 🍰</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rose:#e8a5a5;--rose-deep:#c97c7c;--rose-light:#fdf0f0;
+  --cream:#fdf6ee;--cream-dark:#f0e0cc;
+  --brown:#6b3f2a;--brown-light:#9c6b50;
+  --gold:#c9a96e;--gold-light:#f5e6c8;
+  --sage:#8aab8a;
+  --text:#3a2a20;--text-light:#7a6055;--text-muted:#a89080;
+  --white:#fffdf9;--border:#e8d8c8;
+  --shadow:rgba(107,63,42,0.12);
+  --tab-h:68px;--safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--cream);}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--text);display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative;height:100%;}
+
+/* SCREENS */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--cream);transition:transform .32s cubic-bezier(.4,0,.2,1),opacity .32s;will-change:transform;overflow:hidden;}
+.screen.hidden{transform:translateY(24px);opacity:0;pointer-events:none;}
+
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 16px 12px;padding-top:calc(14px + var(--safe-t));flex-shrink:0;z-index:10;}
+.topbar-row{display:flex;align-items:center;gap:10px;}
+.topbar-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--brown);flex:1;line-height:1;}
+.topbar-title em{font-style:italic;color:var(--rose-deep);}
+.icon-btn{width:38px;height:38px;border-radius:12px;border:none;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--brown);transition:background .15s;flex-shrink:0;}
+.icon-btn:active{background:var(--cream-dark);}
+
+/* SEARCH */
+.search-wrap{margin:12px 16px 6px;position:relative;flex-shrink:0;}
+.search-input{width:100%;padding:12px 40px 12px 42px;border-radius:16px;border:1.5px solid var(--border);background:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+.search-input:focus{border-color:var(--rose-deep);box-shadow:0 0 0 3px rgba(201,124,124,0.12);}
+.s-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;}
+.s-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--cream-dark);border:none;border-radius:50%;width:22px;height:22px;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--text-light);font-weight:700;}
+.s-clear.show{display:flex;}
+
+/* SEARCH RESULTS */
+.search-drop{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:80;background:var(--white);border-radius:16px;box-shadow:0 8px 32px var(--shadow);max-height:52vh;overflow-y:auto;display:none;border:1px solid var(--border);}
+.search-drop.show{display:block;}
+.sri{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.sri:last-child{border-bottom:none;}
+.sri:active{background:var(--cream);}
+.sri-em{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.sri-info{flex:1;min-width:0;}
+.sri-name{font-size:14px;font-weight:700;color:var(--brown);margin-bottom:2px;}
+.sri-addr{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sri-tag{font-size:10px;padding:3px 8px;border-radius:8px;background:var(--gold-light);color:var(--brown-light);font-weight:600;flex-shrink:0;}
+
+/* CHIPS */
+.chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 16px 12px;flex-shrink:0;}
+.chip-row::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);color:var(--text-light);font-family:'Noto Sans TC',sans-serif;font-size:13px;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.chip.on{background:var(--brown);border-color:var(--brown);color:var(--white);}
+.chip:active{transform:scale(.95);}
+
+/* SCROLL */
+.scroll-content{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--tab-h) + var(--safe-b) + 20px);}
+.scroll-content::-webkit-scrollbar{display:none;}
+
+/* SECTION LABEL */
+.section-label{font-size:11px;letter-spacing:1.5px;color:var(--text-muted);padding:14px 16px 8px;text-transform:uppercase;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+.section-label span{font-size:12px;color:var(--brown-light);letter-spacing:0;text-transform:none;font-weight:400;}
+
+/* CARD */
+.shop-card{margin:0 16px 10px;background:var(--white);border-radius:18px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);display:flex;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;border:1px solid rgba(232,216,200,0.5);animation:fadeIn .22s ease both;}
+.shop-card:active{transform:scale(.98);box-shadow:0 1px 4px var(--shadow);}
+.card-left{width:88px;min-width:88px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;}
+.user-badge{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.card-body{flex:1;padding:12px 42px 12px 14px;min-width:0;}
+.card-name{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--brown);line-height:1.25;margin-bottom:3px;}
+.card-tag{display:inline-block;font-size:10px;padding:3px 8px;border-radius:8px;background:var(--gold-light);color:var(--brown-light);font-weight:600;margin-bottom:5px;}
+.card-desc{font-size:12px;color:var(--text-light);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:7px;}
+.card-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.meta-pill{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:3px;}
+.price-tag{font-size:11px;color:var(--rose-deep);font-weight:700;background:var(--rose-light);padding:3px 8px;border-radius:8px;}
+.card-fav{position:absolute;top:10px;right:10px;font-size:20px;background:none;border:none;cursor:pointer;transition:transform .2s;width:28px;height:28px;display:flex;align-items:center;justify-content:center;}
+.card-fav:active{transform:scale(1.35);}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 24px;color:var(--text-muted);}
+.empty .ei{font-size:52px;display:block;margin-bottom:12px;}
+.empty p{font-size:14px;line-height:1.8;}
+
+/* FAB */
+.fab{position:fixed;right:20px;bottom:calc(var(--tab-h) + var(--safe-b) + 16px);width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--rose-deep),var(--brown));border:none;box-shadow:0 4px 20px rgba(107,63,42,0.35);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s;z-index:50;color:white;}
+.fab:active{transform:scale(.9);}
+
+/* TABBAR */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,253,249,0.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);display:flex;height:calc(var(--tab-h) + var(--safe-b));padding-bottom:var(--safe-b);z-index:100;}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:none;padding:8px 0;}
+.tab-icon{font-size:22px;line-height:1;transition:transform .2s;}
+.tab-label{font-size:10px;color:var(--text-muted);font-family:'Noto Sans TC',sans-serif;font-weight:500;transition:color .2s;}
+.tab-dot{width:4px;height:4px;border-radius:50%;background:var(--rose-deep);margin-top:1px;opacity:0;transition:opacity .2s;}
+.tab-item.on .tab-icon{transform:scale(1.1);}
+.tab-item.on .tab-label{color:var(--rose-deep);font-weight:700;}
+.tab-item.on .tab-dot{opacity:1;}
+
+/* MAP SCREEN */
+#mapScreen{background:var(--cream-dark);}
+.map-container{flex:1;position:relative;}
+#mainMap{width:100%;height:100%;border:none;}
+.map-strip{position:absolute;bottom:0;left:0;right:0;display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:14px 16px calc(var(--tab-h) + var(--safe-b) + 14px);}
+.map-strip::-webkit-scrollbar{display:none;}
+.map-mini{flex-shrink:0;width:190px;background:var(--white);border-radius:16px;box-shadow:0 4px 20px rgba(107,63,42,0.18);padding:12px;cursor:pointer;}
+.mm-em{font-size:22px;margin-bottom:5px;}
+.mm-name{font-family:'Noto Serif TC',serif;font-size:13px;font-weight:700;color:var(--brown);margin-bottom:3px;}
+.mm-addr{font-size:11px;color:var(--text-muted);margin-bottom:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.mm-btn{width:100%;padding:8px;border-radius:10px;border:none;background:var(--brown);color:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;}
+
+/* SHEET */
+.sheet-ov{position:fixed;inset:0;z-index:200;background:rgba(58,42,32,0);transition:background .3s;pointer-events:none;}
+.sheet-ov.open{background:rgba(58,42,32,0.55);pointer-events:all;}
+.sheet{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--white);border-radius:24px 24px 0 0;padding-bottom:calc(var(--safe-b) + 20px);max-height:92vh;overflow-y:auto;transition:transform .34s cubic-bezier(.4,0,.2,1);}
+.sheet.open{transform:translateX(-50%) translateY(0);}
+.sheet-handle{width:40px;height:4px;background:var(--cream-dark);border-radius:2px;margin:14px auto 0;}
+.sheet-hero{height:176px;display:flex;align-items:center;justify-content:center;font-size:70px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));margin:12px 16px 0;border-radius:18px;position:relative;}
+.sh-fav{position:absolute;top:10px;right:10px;border:none;background:rgba(255,253,249,0.88);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;}
+.sh-body{padding:16px 20px 8px;}
+.sh-name{font-family:'Playfair Display',serif;font-size:22px;color:var(--brown);line-height:1.2;margin-bottom:4px;}
+.sh-tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:10px;background:var(--gold-light);color:var(--brown-light);font-weight:600;margin-bottom:8px;}
+.sh-stars{color:var(--gold);font-size:14px;letter-spacing:2px;margin-bottom:12px;}
+.info-row{display:flex;gap:10px;margin-bottom:14px;}
+.info-pill{flex:1;background:var(--cream);border-radius:12px;padding:10px 12px;text-align:center;}
+.ip-lbl{font-size:10px;color:var(--text-muted);margin-bottom:3px;}
+.ip-val{font-size:12px;font-weight:700;color:var(--brown);}
+.ip-val.price{color:var(--rose-deep);font-size:13px;}
+.sh-desc{font-size:14px;color:var(--text);line-height:1.8;background:var(--cream);padding:13px 15px;border-radius:14px;border-left:3px solid var(--rose);margin-bottom:14px;}
+.chip-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.chip-sm{font-size:11px;padding:5px 11px;border-radius:10px;border:1px solid var(--border);color:var(--text-light);}
+.sh-addr{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-light);background:var(--cream);padding:11px 14px;border-radius:12px;margin-bottom:16px;}
+.sh-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;}
+.sh-photo{aspect-ratio:1;border-radius:12px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:26px;}
+.action-row{display:flex;gap:10px;}
+.btn-prim{flex:1;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--rose-deep),var(--brown));color:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;}
+.btn-prim:active{opacity:.85;}
+.btn-out{padding:15px 14px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text-light);font-family:'Noto Sans TC',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none;}
+.btn-del{width:100%;padding:12px;border-radius:12px;border:1px solid var(--rose);background:transparent;color:var(--rose-deep);font-family:'Noto Sans TC',sans-serif;font-size:13px;cursor:pointer;margin-top:10px;}
+
+/* ADD FORM */
+.form-ov{position:fixed;inset:0;z-index:300;background:rgba(58,42,32,0.6);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.form-ov.open{opacity:1;pointer-events:all;}
+.form-box{width:100%;max-width:480px;background:var(--white);border-radius:24px 24px 0 0;padding-bottom:calc(var(--safe-b) + 20px);max-height:90vh;overflow-y:auto;transform:translateY(60px);transition:transform .34s cubic-bezier(.4,0,.2,1);}
+.form-ov.open .form-box{transform:translateY(0);}
+.form-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 6px;}
+.form-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--brown);}
+.form-close{background:var(--cream-dark);border:none;border-radius:50%;width:32px;height:32px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-light);}
+.form-sub{font-size:12px;color:var(--text-muted);padding:0 20px 14px;border-bottom:1px solid var(--border);}
+.form-body{padding:16px 20px;}
+.fl{font-size:12px;color:var(--text-light);margin-bottom:6px;display:block;font-weight:600;letter-spacing:.3px;}
+.fi{width:100%;padding:12px 14px;border-radius:13px;border:1.5px solid var(--border);background:var(--cream);font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.fi:focus{border-color:var(--rose-deep);box-shadow:0 0 0 3px rgba(201,124,124,0.12);background:var(--white);}
+textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fg{margin-bottom:16px;}
+.star-row{display:flex;gap:8px;margin-top:6px;}
+.star-btn{font-size:26px;cursor:pointer;opacity:.25;transition:opacity .15s;background:none;border:none;}
+.star-btn.on{opacity:1;}
+.em-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:6px;}
+.em-opt{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.em-opt.sel{border-color:var(--rose-deep);background:var(--rose-light);}
+.em-opt:active{transform:scale(.9);}
+.form-submit{margin:4px 20px 0;padding:15px;border-radius:14px;border:none;width:calc(100% - 40px);background:linear-gradient(135deg,var(--rose-deep),var(--brown));color:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+.form-submit:active{opacity:.85;}
+
+/* TOAST */
+.toast{position:fixed;top:calc(var(--safe-t) + 12px);left:50%;transform:translateX(-50%) translateY(-80px);background:var(--brown);color:var(--white);padding:10px 22px;border-radius:30px;font-size:13px;font-weight:500;white-space:nowrap;z-index:999;transition:transform .34s cubic-bezier(.4,0,.2,1),opacity .34s;opacity:0;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- ▓▓ HOME SCREEN ▓▓ -->
+<div class="screen" id="homeScreen">
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="topbar-title">甜點<em>地圖</em></div>
+      <button class="icon-btn" onclick="openForm()">＋</button>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <span class="s-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="search" placeholder="搜尋店名、地址、甜點類型…" autocomplete="off" oninput="onSearch(this)" onfocus="onFocus()" onblur="onBlur()">
+    <button class="s-clear" id="sClear" onclick="clearSearch()">✕</button>
+    <div class="search-drop" id="searchDrop"></div>
+  </div>
+  <div class="chip-row" id="chipRow"></div>
+  <div class="scroll-content" id="homeList"></div>
+  <button class="fab" onclick="openForm()">＋</button>
+</div>
+
+<!-- ▓▓ FAV SCREEN ▓▓ -->
+<div class="screen hidden" id="favScreen">
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="topbar-title">我的<em>收藏</em></div>
+    </div>
+  </div>
+  <div class="scroll-content" id="favList"></div>
+</div>
+
+<!-- ▓▓ MAP SCREEN ▓▓ -->
+<div class="screen hidden" id="mapScreen">
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="topbar-title">甜點<em>地圖</em></div>
+    </div>
+  </div>
+  <div class="map-container">
+    <iframe id="mainMap" src="https://maps.google.com/maps?q=台中市甜點&z=14&output=embed" loading="lazy"></iframe>
+    <div class="map-strip" id="mapStrip"></div>
+  </div>
+</div>
+
+<!-- DETAIL SHEET -->
+<div class="sheet-ov" id="sheetOv" onclick="sheetOvClick(event)">
+  <div class="sheet" id="sheet"><div class="sheet-handle"></div><div id="sheetBody"></div></div>
+</div>
+
+<!-- ADD FORM -->
+<div class="form-ov" id="formOv" onclick="formOvClick(event)">
+  <div class="form-box">
+    <div class="form-hd">
+      <div class="form-title">新增甜點店 🍰</div>
+      <button class="form-close" onclick="closeForm()">✕</button>
+    </div>
+    <div class="form-sub">把你發現的甜點秘境加進地圖！</div>
+    <div class="form-body">
+      <div class="fg"><label class="fl">店名 *</label><input class="fi" id="f-name" placeholder="例：某某甜點工作室"></div>
+      <div class="fg"><label class="fl">甜點類型 *</label>
+        <select class="fi" id="f-tag">
+          <option>千層蛋糕</option><option>水果塔</option><option>抹茶</option><option>泡芙</option>
+          <option>生乳蛋糕</option><option>冰品</option><option>可頌</option><option>布丁</option>
+          <option>創意甜點</option><option>日式甜點</option><option>法式甜點</option><option>其他</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">店家介紹</label><textarea class="fi" id="f-desc" placeholder="口味、環境、招牌品項…說說你的感受"></textarea></div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">平均消費</label><input class="fi" id="f-price" placeholder="例：$150–$300"></div>
+        <div class="fg"><label class="fl">營業時間</label><input class="fi" id="f-hours" placeholder="11:00–20:00"></div>
+      </div>
+      <div class="fg"><label class="fl">地址 *</label><input class="fi" id="f-addr" placeholder="台中市…"></div>
+      <div class="fg"><label class="fl">評分</label>
+        <div class="star-row" id="starRow">
+          <button class="star-btn on" data-v="1" onclick="setStar(1)">★</button>
+          <button class="star-btn on" data-v="2" onclick="setStar(2)">★</button>
+          <button class="star-btn on" data-v="3" onclick="setStar(3)">★</button>
+          <button class="star-btn" data-v="4" onclick="setStar(4)">★</button>
+          <button class="star-btn" data-v="5" onclick="setStar(5)">★</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">選個表情符號</label><div class="em-grid" id="emGrid"></div></div>
+    </div>
+    <button class="form-submit" onclick="submitShop()">✦ 新增到地圖</button>
+  </div>
+</div>
+
+<!-- TABBAR -->
+<nav class="tabbar">
+  <button class="tab-item on" id="tab-home" onclick="switchTab('home')">
+    <span class="tab-icon">🏠</span><span class="tab-label">探索</span><span class="tab-dot"></span>
+  </button>
+  <button class="tab-item" id="tab-fav" onclick="switchTab('fav')">
+    <span class="tab-icon">🤍</span><span class="tab-label">收藏</span><span class="tab-dot"></span>
+  </button>
+  <button class="tab-item" id="tab-map" onclick="switchTab('map')">
+    <span class="tab-icon">🗺️</span><span class="tab-label">地圖</span><span class="tab-dot"></span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════ DATA ═══════════════════
+const EMOJIS=['🍰','🍮','🧁','🍩','🍫','🥐','🍓','🍑','🍇','🥝','🌸','🌿','🍵','☕','✨','🎂','🫐','🍋','🍊','🍒','🌹'];
+const ALL_TAGS=['千層蛋糕','水果塔','抹茶','泡芙','日式','法式','生乳蛋糕','創意甜點','伴手禮'];
+
+const BUILTIN=[
+  {id:1,name:'蒔初甜點',tag:'千層蛋糕',tags:['千層蛋糕','水果千層','法式','文青'],emoji:'🍰',desc:'台中必吃千層名店，清新文青裝潢帶有韓系咖啡廳氛圍。招牌水果千層層層鋪滿五彩繽紛水果，豪邁用料吃起來酸酸甜甜，二樓大片落地窗與乾燥花牆是打卡必訪之地。',price:'$200–$350',hours:'11:00–19:00',address:'台中市西區五權西六街69號',lat:24.1367,lng:120.6657,stars:5,builtin:true},
+  {id:2,name:'窩巷 Hidden Lane',tag:'生乳蛋糕',tags:['生乳蛋糕','水果蛋糕','柳川','網美'],emoji:'🌿',desc:'落腳在柳川旁，大面玻璃窗引進綠意。招牌迷你水果生乳蛋糕，圓形戚風搭配五彩水果宛如珠寶盒，好拍又好吃，是台中最具質感的甜點店之一。',price:'$200–$350',hours:'12:30–18:00（週三四休）',address:'台中市西區柳川東路二段56號',lat:24.1408,lng:120.6681,stars:5,builtin:true},
+  {id:3,name:'TokuToku matcha & coffee',tag:'抹茶',tags:['抹茶','日式','老宅','和菓子'],emoji:'🍵',desc:'由台灣與日本女孩共同打造的老屋抹茶專賣店。二樓和室感受正宗日本茶道，招牌抹茶紅豆吐司外酥內軟搭配紅豆泥與奶油，茶香濃郁甜而不膩。',price:'$150–$280',hours:'13:00–19:00（週三四休）',address:'台中市西區中興四巷13號',lat:24.1519,lng:120.6693,stars:5,builtin:true},
+  {id:4,name:'香緹果子咖啡館',tag:'千層蛋糕',tags:['千層蛋糕','法式','北區','質感'],emoji:'✨',desc:'網友強推台中最強千層蛋糕！紅烏龍千層夾滑順布丁、鐵觀音千層搭鮮奶麻糬，搭配諾曼第頂級生乳鮮奶油，即使不常吃甜食的人也豎起大拇指。',price:'$200–$400',hours:'12:00–19:00',address:'台中市北區崇德路',lat:24.1677,lng:120.6868,stars:5,builtin:true},
+  {id:5,name:'偷偷 Toutou Cuisine',tag:'創意甜點',tags:['創意甜點','玻璃屋','16宮格','特色'],emoji:'🪟',desc:'藏在巷弄中的玻璃屋甜點店，最知名的是 16 宮格甜點組合，每格皆有不同甜品且不定期更換，每次造訪都有新驚喜感，視覺與味覺雙重饗宴。',price:'$250–$450',hours:'12:30–20:00',address:'台中市西區精誠二街5號',lat:24.1478,lng:120.6588,stars:4,builtin:true},
+  {id:6,name:'可可庫奇甜點工坊',tag:'水果塔',tags:['水果塔','法式','中友商圈','季節限定'],emoji:'🫐',desc:'隱身在中友百貨巷弄內，以堆滿新鮮水果的法式水果塔最為知名，隨季節推出不同系列。會員辦卡 $980 天天享買一送一超划算。低消 $160 限時90分鐘內用。',price:'$160–$300',hours:'11:00–20:00（週二休）',address:'台中市北區三民路三段201巷7號',lat:24.1556,lng:120.6789,stars:4,builtin:true},
+  {id:7,name:'LIGAWA dessert 哩嘎哇',tag:'千層蛋糕',tags:['千層蛋糕','日式','老宅','手沖咖啡'],emoji:'🍃',desc:'店名取自台語「你和我」諧音，50年老屋翻新成優雅日式咖啡廳。抹茶與焙茶千層餅皮濕潤散發茶香，是熟客力推的大人系口味，手沖咖啡也相當有水準。',price:'$180–$320',hours:'11:00–18:00',address:'台中市精武路（精武車站旁）',lat:24.1399,lng:120.6975,stars:5,builtin:true},
+  {id:8,name:'花甜囍室',tag:'水果塔',tags:['水果塔','乳酪','戚風','北區'],emoji:'🌸',desc:'專做水果塔與乳酪的甜點店，隨季節推出各式塔類。獨創「塔上戚風」在酥脆派皮上疊一層戚風蛋糕，一次享受兩種截然不同口感，創意令人驚艷。',price:'$150–$280',hours:'11:00–19:00（週二休）',address:'台中市北區健行路958號',lat:24.1671,lng:120.6818,stars:4,builtin:true},
+  {id:9,name:'萊姆16手作甜點',tag:'千層蛋糕',tags:['千層蛋糕','抹茶','文青','巷弄'],emoji:'🍋',desc:'藏在北區天津一街小巷的秘密基地，抹茶千層蛋糕是抹茶控心頭好。二樓窗邊沙發區超熱門，氛圍舒適好拍，讓人一坐就不想走的溫馨文青風。',price:'$180–$350',hours:'12:00–20:00',address:'台中市北區天津一街',lat:24.1542,lng:120.6731,stars:4,builtin:true},
+  {id:10,name:'Supple Coffee',tag:'水果千層',tags:['水果千層','生乳捲','隱藏版','CP值'],emoji:'☕',desc:'文心南路上超受歡迎的隱藏版寶藏店，水果千層是人氣第一，薄而有蛋香的餅皮搭配新鮮水果，滿滿餡料只要百元超佛價，CP值衝破天花板。',price:'$100–$200',hours:'11:00–19:00',address:'台中市南區文心南路901巷8號1樓',lat:24.1312,lng:120.6588,stars:4,builtin:true},
+  {id:11,name:'蜜柑 Citrus',tag:'法式甜點',tags:['法式甜點','藍帶','香檸','瑪德蓮'],emoji:'🍊',desc:'老闆兄弟放下工程師身份赴法藍帶學習後開設。招牌香檸外層裹綠檸檬糖霜、裡頭拌黃檸檬果肉，瑪德蓮、杏仁千層各個散發濃厚法式美學，正宗法國味就在台中。',price:'$150–$350',hours:'12:00–19:00（週一休）',address:'台中市西區',lat:24.1488,lng:120.6612,stars:5,builtin:true},
+  {id:12,name:'法芙妮烘焙甜點',tag:'泡芙',tags:['泡芙','水果塔','可頌','平價'],emoji:'🥐',desc:'北海道牛奶泡芙一個才 $28，餡料濃郁厚實不甜膩。有公益店和時代店兩間，勤美誠品旁超方便。門口有可愛的大馬卡龍雕塑可以拍照打卡。',price:'$50–$200',hours:'10:15–22:30',address:'台中市東區復興路四段186號1樓',lat:24.1368,lng:120.6892,stars:4,builtin:true},
+  {id:13,name:'Overture 序曲',tag:'千層蛋糕',tags:['千層蛋糕','塔類','麵包','多分店'],emoji:'🎂',desc:'台中擁有三家分店的超人氣咖啡廳，每間皆有獨特概念設計。千層蛋糕份量扎實，餅皮奶油水果比例恰到好處，層次分明就像一首典雅的協奏曲。建議提前預訂。',price:'$200–$400',hours:'11:00–21:00',address:'台中市（多分店）',lat:24.1453,lng:120.6721,stars:5,builtin:true},
+  {id:14,name:'BUTTER HOTEL 奶油飯店',tag:'伴手禮',tags:['伴手禮','奶油餅乾','打卡','法國奶油'],emoji:'🧈',desc:'由台北知名品牌打造，每層樓獨特主題設計充滿戲劇感。使用法國 ÉCHIRÉ 頂級奶油製作，生乳酪蜂蜜海鹽、台中限定太陽奶油餅乾，精美包裝超適合送禮。',price:'$180–$600',hours:'11:00–21:00',address:'台中市',lat:24.1612,lng:120.6544,stars:4,builtin:true},
+  {id:15,name:'La Maison 梅笙蛋糕工作室',tag:'泡芙',tags:['泡芙','草莓蛋糕','預約制','高CP'],emoji:'🍓',desc:'法式聖多諾黑泡芙只要 $70 卻幾乎天天秒殺！冬季限定鮮奶草莓蛋糕草莓鋪好鋪滿。只接受電話預訂，不能私訊或網路留言，想吃一定要記得先打電話預約！',price:'$70–$350',hours:'依電話預約',address:'台中市北區永興街',lat:24.1588,lng:120.6755,stars:5,builtin:true},
+];
+
+// ═══════════════════ STATE ═══════════════════
+let shops=[];
+let favs=new Set();
+let activeTab='home';
+let activeFilter='all';
+let fStars=3;
+let fEmoji='🍰';
+let sTimer;
+
+function load(){
+  try{
+    const u=localStorage.getItem('ds_shops');
+    shops=[...BUILTIN,...(u?JSON.parse(u):[])];
+    const f=localStorage.getItem('ds_favs');
+    favs=f?new Set(JSON.parse(f)):new Set();
+  }catch(e){shops=[...BUILTIN];favs=new Set();}
+}
+function saveShops(){localStorage.setItem('ds_shops',JSON.stringify(shops.filter(s=>!s.builtin)));}
+function saveFavs(){localStorage.setItem('ds_favs',JSON.stringify([...favs]));}
+
+// ═══════════════════ TABS ═══════════════════
+function switchTab(t){
+  activeTab=t;
+  ['home','fav','map'].forEach(x=>{
+    document.getElementById(x+'Screen').classList.toggle('hidden',x!==t);
+    document.getElementById('tab-'+x).classList.toggle('on',x===t);
+  });
+  document.querySelector('.fab').style.display=t==='home'?'flex':'none';
+  if(t==='fav')renderFavs();
+  if(t==='map')renderMapStrip();
+}
+
+// ═══════════════════ FILTER / RENDER ═══════════════════
+function buildChips(){
+  const row=document.getElementById('chipRow');
+  row.innerHTML=['全部',...ALL_TAGS].map(t=>{
+    const val=t==='全部'?'all':t;
+    return `<button class="chip${val===activeFilter?' on':''}" onclick="setFilter('${val}',this)">${t}</button>`;
+  }).join('');
+}
+
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  renderHome();
+}
+
+function getFiltered(q=''){
+  let list=shops;
+  if(activeFilter!=='all') list=list.filter(s=>s.tag===activeFilter||(s.tags&&s.tags.includes(activeFilter)));
+  if(q){const lq=q.toLowerCase();list=list.filter(s=>s.name.toLowerCase().includes(lq)||s.address.toLowerCase().includes(lq)||s.tag.toLowerCase().includes(lq)||(s.tags&&s.tags.some(t=>t.toLowerCase().includes(lq)))||(s.desc&&s.desc.toLowerCase().includes(lq)));}
+  return list;
+}
+
+function cardHTML(s){
+  const fav=favs.has(s.id);
+  return `<div class="shop-card" id="sc-${s.id}" onclick="openSheet(${s.id})">
+    <div class="card-left">${s.emoji||'🍰'}${!s.builtin?'<div class="user-badge">我新增</div>':''}</div>
+    <div class="card-body">
+      <div class="card-name">${s.name}</div>
+      <div class="card-tag">${s.tag}</div>
+      <div class="card-desc">${s.desc||'尚無介紹'}</div>
+      <div class="card-meta">
+        <span class="meta-pill">📍 ${(s.address||'').substring(0,14)}</span>
+        <span class="price-tag">💰 ${s.price||'–'}</span>
+      </div>
+    </div>
+    <button class="card-fav" onclick="toggleFav(event,${s.id})">${fav?'❤️':'🤍'}</button>
+  </div>`;
+}
+
+function renderHome(q=''){
+  const list=getFiltered(q);
+  const el=document.getElementById('homeList');
+  if(!list.length){el.innerHTML=`<div class="empty"><span class="ei">🍽️</span><p>找不到符合的甜點店<br><small>試試其他關鍵字，或點 ＋ 新增！</small></p></div>`;return;}
+  const user=list.filter(s=>!s.builtin);
+  const bi=list.filter(s=>s.builtin);
+  let html='';
+  if(user.length){html+=`<div class="section-label">我新增的店家 <span>${user.length} 間</span></div>`+user.map(cardHTML).join('');}
+  html+=`<div class="section-label">精選甜點店 <span>${bi.length} 間</span></div>`+bi.map(cardHTML).join('');
+  el.innerHTML=html;
+}
+
+function renderFavs(){
+  const list=shops.filter(s=>favs.has(s.id));
+  const el=document.getElementById('favList');
+  el.innerHTML=!list.length
+    ?`<div class="empty"><span class="ei">🤍</span><p>還沒有收藏的店家<br><small>在探索頁點 🤍 加入收藏！</small></p></div>`
+    :`<div class="section-label">已收藏 <span>${list.length} 間</span></div>`+list.map(cardHTML).join('');
+}
+
+function renderMapStrip(){
+  document.getElementById('mapStrip').innerHTML=shops.map(s=>`
+    <div class="map-mini" onclick="openSheet(${s.id})">
+      <div class="mm-em">${s.emoji||'🍰'}</div>
+      <div class="mm-name">${s.name}</div>
+      <div class="mm-addr">${s.address||''}</div>
+      <a class="mm-btn" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((s.address||s.name)+' 台中')}" target="_blank">🗺️ 導航前往</a>
+    </div>`).join('');
+}
+
+// ═══════════════════ FAVORITES ═══════════════════
+function toggleFav(e,id){
+  e.stopPropagation();
+  favs.has(id)?(favs.delete(id),toast('已移除收藏 🤍')):(favs.add(id),toast('已加入收藏 ❤️'));
+  saveFavs();
+  const btn=document.querySelector(`#sc-${id} .card-fav`);
+  if(btn)btn.textContent=favs.has(id)?'❤️':'🤍';
+  const sh=document.getElementById('shFav');
+  if(sh&&parseInt(sh.dataset.id)===id)sh.textContent=favs.has(id)?'❤️':'🤍';
+}
+
+// ═══════════════════ DETAIL SHEET ═══════════════════
+function openSheet(id){
+  const s=shops.find(x=>x.id===id);if(!s)return;
+  const isFav=favs.has(id);
+  const stars='★'.repeat(s.stars||3)+'☆'.repeat(5-(s.stars||3));
+  document.getElementById('sheetBody').innerHTML=`
+    <div class="sheet-hero">${s.emoji||'🍰'}
+      <button id="shFav" data-id="${id}" class="sh-fav" onclick="toggleFav(event,${id})">${isFav?'❤️':'🤍'}</button>
+    </div>
+    <div class="sh-body">
+      <div class="sh-name">${s.name}</div>
+      <div class="sh-tag">${s.tag}</div>
+      <div class="sh-stars">${stars}</div>
+      <div class="info-row">
+        <div class="info-pill"><div class="ip-lbl">💰 平均消費</div><div class="ip-val price">${s.price||'–'}</div></div>
+        <div class="info-pill"><div class="ip-lbl">🕐 營業時間</div><div class="ip-val" style="font-size:11px;">${s.hours||'–'}</div></div>
+      </div>
+      <div class="sh-desc">${s.desc||'尚無介紹'}</div>
+      ${s.tags&&s.tags.length?`<div class="chip-list">${s.tags.map(t=>`<span class="chip-sm">${t}</span>`).join('')}</div>`:''}
+      <div class="sh-photos">${[s.emoji||'🍰','🍓','☕'].map(p=>`<div class="sh-photo">${p}</div>`).join('')}</div>
+      <div class="sh-addr">📍 <span>${s.address||'–'}</span></div>
+      <div class="action-row">
+        <a class="btn-prim" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((s.address||s.name)+' 台中')}" target="_blank">🗺️ Google Maps 導航</a>
+        <a class="btn-out" href="https://maps.apple.com/?q=${encodeURIComponent(s.name)}" target="_blank">🍎</a>
+      </div>
+      ${!s.builtin?`<button class="btn-del" onclick="deleteShop(${id})">🗑 刪除這間店家</button>`:''}
+    </div>`;
+  document.getElementById('sheetOv').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+}
+
+function closeSheet(){
+  document.getElementById('sheetOv').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+}
+function sheetOvClick(e){if(e.target===document.getElementById('sheetOv'))closeSheet();}
+
+function deleteShop(id){
+  if(!confirm('確定要刪除這間店家嗎？'))return;
+  shops=shops.filter(s=>s.id!==id);favs.delete(id);
+  saveShops();saveFavs();closeSheet();renderHome();toast('已刪除 🗑');
+}
+
+// ═══════════════════ SEARCH ═══════════════════
+function onSearch(inp){
+  const q=inp.value.trim();
+  document.getElementById('sClear').classList.toggle('show',q.length>0);
+  clearTimeout(sTimer);
+  sTimer=setTimeout(()=>q?showDrop(q):(hideDrop(),renderHome()),180);
+}
+
+function showDrop(q){
+  const res=getFiltered(q).slice(0,8);
+  const el=document.getElementById('searchDrop');
+  el.innerHTML=!res.length
+    ?`<div style="padding:18px;text-align:center;color:var(--text-muted);font-size:13px;">🔍 找不到「${q}」相關店家</div>`
+    :res.map(s=>`<div class="sri" onclick="openSheet(${s.id});hideDrop();">
+        <div class="sri-em">${s.emoji||'🍰'}</div>
+        <div class="sri-info">
+          <div class="sri-name">${hl(s.name,q)}</div>
+          <div class="sri-addr">${s.address||''}</div>
+        </div>
+        <span class="sri-tag">${s.tag}</span>
+      </div>`).join('');
+  el.classList.add('show');
+}
+function hl(t,q){return t.replace(new RegExp(q,'gi'),m=>`<mark style="background:var(--gold-light);color:var(--brown);border-radius:3px;">${m}</mark>`);}
+function hideDrop(){document.getElementById('searchDrop').classList.remove('show');}
+function onFocus(){if(document.getElementById('searchInput').value)document.getElementById('searchDrop').classList.add('show');}
+function onBlur(){setTimeout(hideDrop,200);}
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('sClear').classList.remove('show');
+  hideDrop();renderHome();
+}
+
+// ═══════════════════ ADD FORM ═══════════════════
+function openForm(){
+  document.getElementById('formOv').classList.add('open');
+  ['f-name','f-desc','f-price','f-hours','f-addr'].forEach(id=>document.getElementById(id).value='');
+  setStar(3);selectEmoji('🍰');
+}
+function closeForm(){document.getElementById('formOv').classList.remove('open');}
+function formOvClick(e){if(e.target===document.getElementById('formOv'))closeForm();}
+
+function setStar(n){
+  fStars=n;
+  document.querySelectorAll('.star-btn').forEach(b=>b.classList.toggle('on',parseInt(b.dataset.v)<=n));
+}
+function selectEmoji(em){
+  fEmoji=em;
+  document.querySelectorAll('.em-opt').forEach(b=>b.classList.toggle('sel',b.dataset.e===em));
+}
+function buildEmGrid(){
+  document.getElementById('emGrid').innerHTML=EMOJIS.map(e=>`<button class="em-opt${e===fEmoji?' sel':''}" data-e="${e}" onclick="selectEmoji('${e}')">${e}</button>`).join('');
+}
+
+function submitShop(){
+  const name=document.getElementById('f-name').value.trim();
+  const addr=document.getElementById('f-addr').value.trim();
+  if(!name){toast('請填寫店名！');return;}
+  if(!addr){toast('請填寫地址！');return;}
+  const s={id:Date.now(),name,tag:document.getElementById('f-tag').value,tags:[document.getElementById('f-tag').value],emoji:fEmoji,desc:document.getElementById('f-desc').value.trim(),price:document.getElementById('f-price').value.trim()||'–',hours:document.getElementById('f-hours').value.trim()||'–',address:addr,lat:24.1477,lng:120.6736,stars:fStars,builtin:false};
+  shops.unshift(s);saveShops();closeForm();renderHome();toast('🎉 成功新增「'+name+'」！');
+}
+
+// ═══════════════════ TOAST ═══════════════════
+let tTimer;
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(tTimer);tTimer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// ═══════════════════ INIT ═══════════════════
+load();buildChips();buildEmGrid();renderHome();
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();closeForm();}});
+</script>
+</body>
+</html>
