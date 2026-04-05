@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>甜點地圖 🍰</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --rose:#e8a5a5;--rose-deep:#c97c7c;--rose-light:#fdf0f0;
@@ -179,7 +180,6 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 </head>
 <body>
 
-<!-- ▓▓ HOME SCREEN ▓▓ -->
 <div class="screen" id="homeScreen">
   <div class="topbar">
     <div class="topbar-row">
@@ -198,7 +198,6 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
   <button class="fab" onclick="openForm()">＋</button>
 </div>
 
-<!-- ▓▓ FAV SCREEN ▓▓ -->
 <div class="screen hidden" id="favScreen">
   <div class="topbar">
     <div class="topbar-row">
@@ -208,7 +207,6 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
   <div class="scroll-content" id="favList"></div>
 </div>
 
-<!-- ▓▓ MAP SCREEN ▓▓ -->
 <div class="screen hidden" id="mapScreen">
   <div class="topbar">
     <div class="topbar-row">
@@ -221,12 +219,10 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
   </div>
 </div>
 
-<!-- DETAIL SHEET -->
 <div class="sheet-ov" id="sheetOv" onclick="sheetOvClick(event)">
   <div class="sheet" id="sheet"><div class="sheet-handle"></div><div id="sheetBody"></div></div>
 </div>
 
-<!-- ADD FORM -->
 <div class="form-ov" id="formOv" onclick="formOvClick(event)">
   <div class="form-box">
     <div class="form-hd">
@@ -264,7 +260,6 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
   </div>
 </div>
 
-<!-- TABBAR -->
 <nav class="tabbar">
   <button class="tab-item on" id="tab-home" onclick="switchTab('home')">
     <span class="tab-icon">🏠</span><span class="tab-label">探索</span><span class="tab-dot"></span>
@@ -280,6 +275,11 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 <div class="toast" id="toast"></div>
 
 <script>
+// ═══════════════════ SUPABASE INIT ═══════════════════
+const _supabaseUrl = 'https://zzyejteoecflewjewjik.supabase.co';
+const _supabaseKey = 'sb_publishable_l8dyYN6EBE98NOHJNwk8pg_iALzhI4r';
+const db = supabase.createClient(_supabaseUrl, _supabaseKey);
+
 // ═══════════════════ DATA ═══════════════════
 const EMOJIS=['🍰','🍮','🧁','🍩','🍫','🥐','🍓','🍑','🍇','🥝','🌸','🌿','🍵','☕','✨','🎂','🫐','🍋','🍊','🍒','🌹'];
 const ALL_TAGS=['千層蛋糕','水果塔','抹茶','泡芙','日式','法式','生乳蛋糕','創意甜點','伴手禮'];
@@ -311,15 +311,27 @@ let fStars=3;
 let fEmoji='🍰';
 let sTimer;
 
-function load(){
+async function load(){
   try{
-    const u=localStorage.getItem('ds_shops');
-    shops=[...BUILTIN,...(u?JSON.parse(u):[])];
-    const f=localStorage.getItem('ds_favs');
-    favs=f?new Set(JSON.parse(f)):new Set();
-  }catch(e){shops=[...BUILTIN];favs=new Set();}
+    // 從 Supabase 讀取自訂店家
+    let { data, error } = await db.from('shops').select('*');
+    if(error) throw error;
+    
+    // 整理雲端資料，並加到最前面
+    const customShops = (data || []).map(s => ({...s, tags:[s.tag], builtin: false})).reverse();
+    shops = [...customShops, ...BUILTIN];
+
+    // 收藏功能維持在本地
+    const f = localStorage.getItem('ds_favs');
+    favs = f ? new Set(JSON.parse(f)) : new Set();
+  }catch(e){
+    console.error('資料讀取失敗:', e);
+    shops = [...BUILTIN];
+    favs = new Set();
+  }
+  renderHome();
 }
-function saveShops(){localStorage.setItem('ds_shops',JSON.stringify(shops.filter(s=>!s.builtin)));}
+
 function saveFavs(){localStorage.setItem('ds_favs',JSON.stringify([...favs]));}
 
 // ═══════════════════ TABS ═══════════════════
@@ -359,8 +371,8 @@ function getFiltered(q=''){
 
 function cardHTML(s){
   const fav=favs.has(s.id);
-  return `<div class="shop-card" id="sc-${s.id}" onclick="openSheet(${s.id})">
-    <div class="card-left">${s.emoji||'🍰'}${!s.builtin?'<div class="user-badge">我新增</div>':''}</div>
+  return `<div class="shop-card" id="sc-${s.id}" onclick="openSheet('${s.id}')">
+    <div class="card-left">${s.emoji||'🍰'}${!s.builtin?'<div class="user-badge">大家新增</div>':''}</div>
     <div class="card-body">
       <div class="card-name">${s.name}</div>
       <div class="card-tag">${s.tag}</div>
@@ -370,7 +382,7 @@ function cardHTML(s){
         <span class="price-tag">💰 ${s.price||'–'}</span>
       </div>
     </div>
-    <button class="card-fav" onclick="toggleFav(event,${s.id})">${fav?'❤️':'🤍'}</button>
+    <button class="card-fav" onclick="toggleFav(event,'${s.id}')">${fav?'❤️':'🤍'}</button>
   </div>`;
 }
 
@@ -381,7 +393,7 @@ function renderHome(q=''){
   const user=list.filter(s=>!s.builtin);
   const bi=list.filter(s=>s.builtin);
   let html='';
-  if(user.length){html+=`<div class="section-label">我新增的店家 <span>${user.length} 間</span></div>`+user.map(cardHTML).join('');}
+  if(user.length){html+=`<div class="section-label">地圖探索的新店家 <span>${user.length} 間</span></div>`+user.map(cardHTML).join('');}
   html+=`<div class="section-label">精選甜點店 <span>${bi.length} 間</span></div>`+bi.map(cardHTML).join('');
   el.innerHTML=html;
 }
@@ -396,7 +408,7 @@ function renderFavs(){
 
 function renderMapStrip(){
   document.getElementById('mapStrip').innerHTML=shops.map(s=>`
-    <div class="map-mini" onclick="openSheet(${s.id})">
+    <div class="map-mini" onclick="openSheet('${s.id}')">
       <div class="mm-em">${s.emoji||'🍰'}</div>
       <div class="mm-name">${s.name}</div>
       <div class="mm-addr">${s.address||''}</div>
@@ -407,22 +419,28 @@ function renderMapStrip(){
 // ═══════════════════ FAVORITES ═══════════════════
 function toggleFav(e,id){
   e.stopPropagation();
-  favs.has(id)?(favs.delete(id),toast('已移除收藏 🤍')):(favs.add(id),toast('已加入收藏 ❤️'));
+  // id 可能是數字或字串，統一轉為字串處理避免型態問題
+  const idStr = String(id);
+  // 我們需找出真正對應的 id 型態存入
+  const realId = shops.find(s => String(s.id) === idStr)?.id;
+  if(!realId) return;
+
+  favs.has(realId)?(favs.delete(realId),toast('已移除收藏 🤍')):(favs.add(realId),toast('已加入收藏 ❤️'));
   saveFavs();
-  const btn=document.querySelector(`#sc-${id} .card-fav`);
-  if(btn)btn.textContent=favs.has(id)?'❤️':'🤍';
+  const btn=document.querySelector(`#sc-${idStr} .card-fav`);
+  if(btn)btn.textContent=favs.has(realId)?'❤️':'🤍';
   const sh=document.getElementById('shFav');
-  if(sh&&parseInt(sh.dataset.id)===id)sh.textContent=favs.has(id)?'❤️':'🤍';
+  if(sh&&String(sh.dataset.id)===idStr)sh.textContent=favs.has(realId)?'❤️':'🤍';
 }
 
 // ═══════════════════ DETAIL SHEET ═══════════════════
 function openSheet(id){
-  const s=shops.find(x=>x.id===id);if(!s)return;
-  const isFav=favs.has(id);
+  const s=shops.find(x=>String(x.id)===String(id));if(!s)return;
+  const isFav=favs.has(s.id);
   const stars='★'.repeat(s.stars||3)+'☆'.repeat(5-(s.stars||3));
   document.getElementById('sheetBody').innerHTML=`
     <div class="sheet-hero">${s.emoji||'🍰'}
-      <button id="shFav" data-id="${id}" class="sh-fav" onclick="toggleFav(event,${id})">${isFav?'❤️':'🤍'}</button>
+      <button id="shFav" data-id="${s.id}" class="sh-fav" onclick="toggleFav(event,'${s.id}')">${isFav?'❤️':'🤍'}</button>
     </div>
     <div class="sh-body">
       <div class="sh-name">${s.name}</div>
@@ -440,7 +458,7 @@ function openSheet(id){
         <a class="btn-prim" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((s.address||s.name)+' 台中')}" target="_blank">🗺️ Google Maps 導航</a>
         <a class="btn-out" href="https://maps.apple.com/?q=${encodeURIComponent(s.name)}" target="_blank">🍎</a>
       </div>
-      ${!s.builtin?`<button class="btn-del" onclick="deleteShop(${id})">🗑 刪除這間店家</button>`:''}
+      ${!s.builtin?`<button class="btn-del" onclick="deleteShop('${s.id}')">🗑 刪除這間店家</button>`:''}
     </div>`;
   document.getElementById('sheetOv').classList.add('open');
   document.getElementById('sheet').classList.add('open');
@@ -452,10 +470,22 @@ function closeSheet(){
 }
 function sheetOvClick(e){if(e.target===document.getElementById('sheetOv'))closeSheet();}
 
-function deleteShop(id){
+async function deleteShop(id){
   if(!confirm('確定要刪除這間店家嗎？'))return;
-  shops=shops.filter(s=>s.id!==id);favs.delete(id);
-  saveShops();saveFavs();closeSheet();renderHome();toast('已刪除 🗑');
+  
+  try {
+    const { error } = await db.from('shops').delete().eq('id', id);
+    if(error) throw error;
+    
+    favs.delete(id);
+    saveFavs();
+    closeSheet();
+    toast('已刪除 🗑');
+    await load();
+  } catch (e) {
+    console.error('刪除失敗', e);
+    toast('刪除失敗 😢');
+  }
 }
 
 // ═══════════════════ SEARCH ═══════════════════
@@ -471,7 +501,7 @@ function showDrop(q){
   const el=document.getElementById('searchDrop');
   el.innerHTML=!res.length
     ?`<div style="padding:18px;text-align:center;color:var(--text-muted);font-size:13px;">🔍 找不到「${q}」相關店家</div>`
-    :res.map(s=>`<div class="sri" onclick="openSheet(${s.id});hideDrop();">
+    :res.map(s=>`<div class="sri" onclick="openSheet('${s.id}');hideDrop();">
         <div class="sri-em">${s.emoji||'🍰'}</div>
         <div class="sri-info">
           <div class="sri-name">${hl(s.name,q)}</div>
@@ -512,13 +542,34 @@ function buildEmGrid(){
   document.getElementById('emGrid').innerHTML=EMOJIS.map(e=>`<button class="em-opt${e===fEmoji?' sel':''}" data-e="${e}" onclick="selectEmoji('${e}')">${e}</button>`).join('');
 }
 
-function submitShop(){
+async function submitShop(){
   const name=document.getElementById('f-name').value.trim();
   const addr=document.getElementById('f-addr').value.trim();
   if(!name){toast('請填寫店名！');return;}
   if(!addr){toast('請填寫地址！');return;}
-  const s={id:Date.now(),name,tag:document.getElementById('f-tag').value,tags:[document.getElementById('f-tag').value],emoji:fEmoji,desc:document.getElementById('f-desc').value.trim(),price:document.getElementById('f-price').value.trim()||'–',hours:document.getElementById('f-hours').value.trim()||'–',address:addr,lat:24.1477,lng:120.6736,stars:fStars,builtin:false};
-  shops.unshift(s);saveShops();closeForm();renderHome();toast('🎉 成功新增「'+name+'」！');
+  
+  const newShop = {
+    name: name,
+    tag: document.getElementById('f-tag').value,
+    desc: document.getElementById('f-desc').value.trim(),
+    price: document.getElementById('f-price').value.trim() || '–',
+    hours: document.getElementById('f-hours').value.trim() || '–',
+    address: addr,
+    emoji: fEmoji,
+    stars: fStars
+  };
+
+  try {
+    const { error } = await db.from('shops').insert([newShop]);
+    if (error) throw error;
+    
+    closeForm();
+    toast('🎉 成功新增「'+name+'」！');
+    await load();
+  } catch (err) {
+    console.error('新增失敗:', err);
+    toast('新增失敗，請檢查欄位格式！ 😢');
+  }
 }
 
 // ═══════════════════ TOAST ═══════════════════
@@ -529,7 +580,12 @@ function toast(msg){
 }
 
 // ═══════════════════ INIT ═══════════════════
-load();buildChips();buildEmGrid();renderHome();
+async function init() {
+  buildChips();
+  buildEmGrid();
+  await load();
+}
+init();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();closeForm();}});
 </script>
 </body>
