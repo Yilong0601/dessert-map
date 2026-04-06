@@ -24,7 +24,6 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 
-/* 解決手機無法捲動：使用 100dvh 動態高度 */
 html,body{height:100dvh;overflow:hidden;background:var(--cream);}
 body{font-family:'Noto Sans TC',sans-serif;color:var(--text);display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative;height:100dvh;}
 
@@ -54,32 +53,30 @@ body{font-family:'Noto Sans TC',sans-serif;color:var(--text);display:flex;flex-d
 .sri{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
 .sri:last-child{border-bottom:none;}
 .sri:active{background:var(--cream);}
-.sri-em{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.sri-em{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0; background-size: cover; background-position: center;}
 .sri-info{flex:1;min-width:0;}
 .sri-name{font-size:14px;font-weight:700;color:var(--brown);margin-bottom:2px;}
 .sri-addr{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .sri-tag{font-size:10px;padding:3px 8px;border-radius:8px;background:var(--gold-light);color:var(--brown-light);font-weight:600;flex-shrink:0;}
 
-/* CHIPS */
+/* CHIPS & SCROLL */
 .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 16px 12px;flex-shrink:0;}
 .chip-row::-webkit-scrollbar{display:none;}
 .chip{flex-shrink:0;padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);color:var(--text-light);font-family:'Noto Sans TC',sans-serif;font-size:13px;cursor:pointer;transition:all .18s;white-space:nowrap;}
 .chip.on{background:var(--brown);border-color:var(--brown);color:var(--white);}
 .chip:active{transform:scale(.95);}
 
-/* SCROLL (解決滾動問題：加上 min-height:0) */
 .scroll-content{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--tab-h) + var(--safe-b) + 20px);}
 .scroll-content::-webkit-scrollbar{display:none;}
 
-/* SECTION LABEL */
 .section-label{font-size:11px;letter-spacing:1.5px;color:var(--text-muted);padding:14px 16px 8px;text-transform:uppercase;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
 .section-label span{font-size:12px;color:var(--brown-light);letter-spacing:0;text-transform:none;font-weight:400;}
 
 /* CARD */
 .shop-card{margin:0 16px 10px;background:var(--white);border-radius:18px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);display:flex;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;border:1px solid rgba(232,216,200,0.5);animation:fadeIn .22s ease both;}
 .shop-card:active{transform:scale(.98);box-shadow:0 1px 4px var(--shadow);}
-.card-left{width:88px;min-width:88px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;}
-.user-badge{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.card-left{width:88px;min-width:88px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:36px;position:relative; background-size: cover; background-position: center;}
+.user-badge{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;white-space:nowrap;z-index:2;}
 .card-body{flex:1;padding:12px 42px 12px 14px;min-width:0;}
 .card-name{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--brown);line-height:1.25;margin-bottom:3px;}
 .card-tag{display:inline-block;font-size:10px;padding:3px 8px;border-radius:8px;background:var(--gold-light);color:var(--brown-light);font-weight:600;margin-bottom:5px;}
@@ -109,18 +106,18 @@ body{font-family:'Noto Sans TC',sans-serif;color:var(--text);display:flex;flex-d
 .tab-item.on .tab-label{color:var(--rose-deep);font-weight:700;}
 .tab-item.on .tab-dot{opacity:1;}
 
-/* MAP SCREEN (更新地圖區塊樣式) */
+/* MAP SCREEN */
 #mapScreen{background:var(--cream-dark);}
 .map-container{flex:1;position:relative;}
-#mainMap{width:100%;height:100%;z-index:1;} /* 地圖容器 */
+#mainMap{width:100%;height:100%;z-index:1;} 
 .leaflet-control-attribution{font-size:9px !important; opacity:0.6;}
-.map-strip{position:absolute;bottom:0;left:0;right:0;display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:14px 16px calc(var(--tab-h) + var(--safe-b) + 14px); z-index:2; pointer-events:none;} /* pointer-events:none 確保滑動不卡住地圖 */
+.map-strip{position:absolute;bottom:0;left:0;right:0;display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:14px 16px calc(var(--tab-h) + var(--safe-b) + 14px); z-index:2; pointer-events:none;} 
 .map-strip::-webkit-scrollbar{display:none;}
 .map-mini{pointer-events:auto; flex-shrink:0; width:190px; background:var(--white); border-radius:16px; box-shadow:0 4px 20px rgba(107,63,42,0.18); padding:12px; cursor:pointer;}
-.mm-em{font-size:22px;margin-bottom:5px;}
+.mm-em{font-size:22px;margin-bottom:5px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; background-size: cover; background-position: center; border-radius:6px;}
 .mm-name{font-family:'Noto Serif TC',serif;font-size:13px;font-weight:700;color:var(--brown);margin-bottom:3px;}
 .mm-addr{font-size:11px;color:var(--text-muted);margin-bottom:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.mm-btn{width:100%;padding:8px;border-radius:10px;border:none;background:var(--brown);color:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;}
+.mm-btn{width:100%;padding:8px;border-radius:10px;border:none;background:var(--brown);color:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
 
 /* SHEET */
 .sheet-ov{position:fixed;inset:0;z-index:200;background:rgba(58,42,32,0);transition:background .3s;pointer-events:none;}
@@ -128,7 +125,7 @@ body{font-family:'Noto Sans TC',sans-serif;color:var(--text);display:flex;flex-d
 .sheet{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--white);border-radius:24px 24px 0 0;padding-bottom:calc(var(--safe-b) + 20px);max-height:92vh;overflow-y:auto;transition:transform .34s cubic-bezier(.4,0,.2,1);}
 .sheet.open{transform:translateX(-50%) translateY(0);}
 .sheet-handle{width:40px;height:4px;background:var(--cream-dark);border-radius:2px;margin:14px auto 0;}
-.sheet-hero{height:176px;display:flex;align-items:center;justify-content:center;font-size:70px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));margin:12px 16px 0;border-radius:18px;position:relative;}
+.sheet-hero{height:176px;display:flex;align-items:center;justify-content:center;font-size:70px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));margin:12px 16px 0;border-radius:18px;position:relative; background-size: cover; background-position: center;}
 .sh-fav{position:absolute;top:10px;right:10px;border:none;background:rgba(255,253,249,0.88);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;}
 .sh-body{padding:16px 20px 8px;}
 .sh-name{font-family:'Playfair Display',serif;font-size:22px;color:var(--brown);line-height:1.2;margin-bottom:4px;}
@@ -143,26 +140,23 @@ body{font-family:'Noto Sans TC',sans-serif;color:var(--text);display:flex;flex-d
 .chip-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
 .chip-sm{font-size:11px;padding:5px 11px;border-radius:10px;border:1px solid var(--border);color:var(--text-light);}
 .sh-addr{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-light);background:var(--cream);padding:11px 14px;border-radius:12px;margin-bottom:16px;}
-.sh-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;}
-.sh-photo{aspect-ratio:1;border-radius:12px;background:linear-gradient(135deg,var(--gold-light),var(--rose-light));display:flex;align-items:center;justify-content:center;font-size:26px;}
 .action-row{display:flex;gap:10px;}
 .btn-prim{flex:1;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--rose-deep),var(--brown));color:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;}
-.btn-prim:active{opacity:.85;}
-.btn-out{padding:15px 14px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text-light);font-family:'Noto Sans TC',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none;}
-.btn-del{width:100%;padding:12px;border-radius:12px;border:1px solid var(--rose);background:transparent;color:var(--rose-deep);font-family:'Noto Sans TC',sans-serif;font-size:13px;cursor:pointer;margin-top:10px;}
+.btn-out{padding:15px 14px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text-light);font-size:14px;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none;}
+.btn-del{width:100%;padding:12px;border-radius:12px;border:1px solid var(--rose);background:transparent;color:var(--rose-deep);font-size:13px;cursor:pointer;margin-top:10px;}
 
-/* ADD FORM */
+/* ADD FORM & UPLOAD UI */
 .form-ov{position:fixed;inset:0;z-index:300;background:rgba(58,42,32,0.6);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
 .form-ov.open{opacity:1;pointer-events:all;}
 .form-box{width:100%;max-width:480px;background:var(--white);border-radius:24px 24px 0 0;padding-bottom:calc(var(--safe-b) + 20px);max-height:90vh;overflow-y:auto;transform:translateY(60px);transition:transform .34s cubic-bezier(.4,0,.2,1);}
 .form-ov.open .form-box{transform:translateY(0);}
 .form-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 6px;}
 .form-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--brown);}
-.form-close{background:var(--cream-dark);border:none;border-radius:50%;width:32px;height:32px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-light);}
+.form-close{background:var(--cream-dark);border:none;border-radius:50%;width:32px;height:32px;font-size:15px;cursor:pointer;}
 .form-sub{font-size:12px;color:var(--text-muted);padding:0 20px 14px;border-bottom:1px solid var(--border);}
 .form-body{padding:16px 20px;}
-.fl{font-size:12px;color:var(--text-light);margin-bottom:6px;display:block;font-weight:600;letter-spacing:.3px;}
-.fi{width:100%;padding:12px 14px;border-radius:13px;border:1.5px solid var(--border);background:var(--cream);font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.fl{font-size:12px;color:var(--text-light);margin-bottom:6px;display:block;font-weight:600;}
+.fi{width:100%;padding:12px 14px;border-radius:13px;border:1.5px solid var(--border);background:var(--cream);font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--text);outline:none;-webkit-appearance:none;}
 .fi:focus{border-color:var(--rose-deep);box-shadow:0 0 0 3px rgba(201,124,124,0.12);background:var(--white);}
 textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -171,25 +165,19 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 .star-btn{font-size:26px;cursor:pointer;opacity:.25;transition:opacity .15s;background:none;border:none;}
 .star-btn.on{opacity:1;}
 .em-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:6px;}
-.em-opt{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.em-opt{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .em-opt.sel{border-color:var(--rose-deep);background:var(--rose-light);}
-.em-opt:active{transform:scale(.9);}
-.form-submit{margin:4px 20px 0;padding:15px;border-radius:14px;border:none;width:calc(100% - 40px);background:linear-gradient(135deg,var(--rose-deep),var(--brown));color:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
-.form-submit:active{opacity:.85;}
-.form-submit:disabled{opacity:0.5;cursor:not-allowed;} /* 讀取中狀態 */
+.form-submit{margin:4px 20px 0;padding:15px;border-radius:14px;border:none;width:calc(100% - 40px);background:linear-gradient(135deg,var(--rose-deep),var(--brown));color:var(--white);font-size:15px;font-weight:700;cursor:pointer;}
+.form-submit:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* 圖片上傳區塊 */
+.file-wrap { width: 100%; height: 120px; border: 2px dashed var(--border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; cursor: pointer; overflow: hidden; position: relative; background: var(--cream); }
+#img-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
+.custom-marker { background: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 6px rgba(0,0,0,0.25); border: 2px solid var(--rose-deep); font-size: 22px; cursor: pointer; transition: transform 0.2s; background-size: cover; background-position: center; }
 
 /* TOAST */
-.toast{position:fixed;top:calc(var(--safe-t) + 12px);left:50%;transform:translateX(-50%) translateY(-80px);background:var(--brown);color:var(--white);padding:10px 22px;border-radius:30px;font-size:13px;font-weight:500;white-space:nowrap;z-index:999;transition:transform .34s cubic-bezier(.4,0,.2,1),opacity .34s;opacity:0;pointer-events:none;}
+.toast{position:fixed;top:calc(var(--safe-t) + 12px);left:50%;transform:translateX(-50%) translateY(-80px);background:var(--brown);color:var(--white);padding:10px 22px;border-radius:30px;font-size:13px;font-weight:500;white-space:nowrap;z-index:999;transition:transform .34s cubic-bezier(.4,0,.2,1),opacity .34s;opacity:0;}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-
-/* 地圖自訂圖標 */
-.custom-marker {
-  background: white; border-radius: 50%; width: 36px; height: 36px; 
-  display: flex; align-items: center; justify-content: center; 
-  box-shadow: 0 3px 6px rgba(0,0,0,0.25); border: 2px solid var(--rose-deep);
-  font-size: 22px; cursor: pointer; transition: transform 0.2s;
-}
-.custom-marker:active { transform: scale(0.85); }
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
@@ -215,23 +203,15 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 </div>
 
 <div class="screen hidden" id="favScreen">
-  <div class="topbar">
-    <div class="topbar-row">
-      <div class="topbar-title">我的<em>收藏</em></div>
-    </div>
-  </div>
+  <div class="topbar"><div class="topbar-row"><div class="topbar-title">我的<em>收藏</em></div></div></div>
   <div class="scroll-content" id="favList"></div>
 </div>
 
 <div class="screen hidden" id="mapScreen">
-  <div class="map-container">
-    <div id="mainMap"></div> <div class="map-strip" id="mapStrip"></div>
-  </div>
+  <div class="map-container"><div id="mainMap"></div> <div class="map-strip" id="mapStrip"></div></div>
 </div>
 
-<div class="sheet-ov" id="sheetOv" onclick="sheetOvClick(event)">
-  <div class="sheet" id="sheet"><div class="sheet-handle"></div><div id="sheetBody"></div></div>
-</div>
+<div class="sheet-ov" id="sheetOv" onclick="sheetOvClick(event)"><div class="sheet" id="sheet"><div class="sheet-handle"></div><div id="sheetBody"></div></div></div>
 
 <div class="form-ov" id="formOv" onclick="formOvClick(event)">
   <div class="form-box">
@@ -241,12 +221,19 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
     </div>
     <div class="form-sub">把你發現的甜點秘境加進地圖！</div>
     <div class="form-body">
+      <div class="fg">
+        <label class="fl">📸 店家照片 (選填，自動取代 Emoji)</label>
+        <div class="file-wrap" onclick="document.getElementById('f-img').click()">
+          <span id="file-label">點擊從相簿選擇圖片</span>
+          <img id="img-preview">
+          <input type="file" id="f-img" hidden accept="image/*" onchange="previewImage(this)">
+        </div>
+      </div>
       <div class="fg"><label class="fl">店名 *</label><input class="fi" id="f-name" placeholder="例：某某甜點工作室"></div>
       <div class="fg"><label class="fl">甜點類型 *</label>
         <select class="fi" id="f-tag">
           <option>千層蛋糕</option><option>水果塔</option><option>抹茶</option><option>泡芙</option>
-          <option>生乳蛋糕</option><option>冰品</option><option>可頌</option><option>布丁</option>
-          <option>創意甜點</option><option>日式甜點</option><option>法式甜點</option><option>其他</option>
+          <option>生乳蛋糕</option><option>布丁</option><option>創意甜點</option><option>日式甜點</option><option>法式甜點</option><option>伴手禮</option><option>其他</option>
         </select>
       </div>
       <div class="fg"><label class="fl">店家介紹</label><textarea class="fi" id="f-desc" placeholder="口味、環境、招牌品項…說說你的感受"></textarea></div>
@@ -266,20 +253,14 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
       </div>
       <div class="fg"><label class="fl">選個表情符號</label><div class="em-grid" id="emGrid"></div></div>
     </div>
-    <button class="form-submit" id="submitBtn" onclick="submitShop()">✦ 新增到地圖</button>
+    <button class="form-submit" id="submitBtn" onclick="submitShop()">✦ 新增並上傳</button>
   </div>
 </div>
 
 <nav class="tabbar">
-  <button class="tab-item on" id="tab-home" onclick="switchTab('home')">
-    <span class="tab-icon">🏠</span><span class="tab-label">探索</span><span class="tab-dot"></span>
-  </button>
-  <button class="tab-item" id="tab-fav" onclick="switchTab('fav')">
-    <span class="tab-icon">🤍</span><span class="tab-label">收藏</span><span class="tab-dot"></span>
-  </button>
-  <button class="tab-item" id="tab-map" onclick="switchTab('map')">
-    <span class="tab-icon">🗺️</span><span class="tab-label">地圖</span><span class="tab-dot"></span>
-  </button>
+  <button class="tab-item on" id="tab-home" onclick="switchTab('home')"><span class="tab-icon">🏠</span><span class="tab-label">探索</span><span class="tab-dot"></span></button>
+  <button class="tab-item" id="tab-fav" onclick="switchTab('fav')"><span class="tab-icon">🤍</span><span class="tab-label">收藏</span><span class="tab-dot"></span></button>
+  <button class="tab-item" id="tab-map" onclick="switchTab('map')"><span class="tab-icon">🗺️</span><span class="tab-label">地圖</span><span class="tab-dot"></span></button>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -292,50 +273,64 @@ const db = supabase.createClient(_supabaseUrl, _supabaseKey);
 
 // ═══════════════════ DATA ═══════════════════
 const EMOJIS=['🍰','🍮','🧁','🍩','🍫','🥐','🍓','🍑','🍇','🥝','🌸','🌿','🍵','☕','✨','🎂','🫐','🍋','🍊','🍒','🌹'];
-const ALL_TAGS=['千層蛋糕','水果塔','抹茶','泡芙','日式','法式','生乳蛋糕','創意甜點','伴手禮'];
+const ALL_TAGS=['千層蛋糕','水果塔','抹茶','泡芙','日式','法式','生乳蛋糕','布丁','創意甜點','伴手禮'];
 
+// 高品質分類情境照 URL (Unsplash 授權圖庫)
+const imgCrepe = 'https://images.unsplash.com/photo-1544480542-951950fac89d?w=600&q=80';
+const imgMatcha = 'https://images.unsplash.com/photo-1582733315328-80b1e90d39fd?w=600&q=80';
+const imgStrawberry = 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80';
+const imgTart = 'https://images.unsplash.com/photo-1519915028121-7d3463d20b13?w=600&q=80';
+const imgPudding = 'https://images.unsplash.com/photo-1541330810554-3474c39af431?w=600&q=80';
+const imgFrench = 'https://images.unsplash.com/photo-1505935428862-770b6f24f629?w=600&q=80';
+const imgPuff = 'https://images.unsplash.com/photo-1603532648955-039310d9ed75?w=600&q=80';
+const imgLemon = 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?w=600&q=80';
+const imgCake = 'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=600&q=80';
+const imgCookie = 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80';
+const imgIce = 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=600&q=80';
+
+// 40間精選名店 + 精準配對圖片網址
 const BUILTIN=[
-  {id:1,name:'蒔初甜點',tag:'千層蛋糕',tags:['千層蛋糕','水果千層','法式','文青'],emoji:'🍰',desc:'台中必吃千層名店，清新文青裝潢帶有韓系咖啡廳氛圍。',price:'$200–$350',hours:'11:00–19:00',address:'台中市西區五權西六街69號',lat:24.1367,lng:120.6657,stars:5,builtin:true},
-  {id:2,name:'窩巷 Hidden Lane',tag:'生乳蛋糕',tags:['生乳蛋糕','水果蛋糕','柳川','網美'],emoji:'🌿',desc:'落腳在柳川旁，大面玻璃窗引進綠意。招牌迷你水果生乳蛋糕，宛如珠寶盒。',price:'$200–$350',hours:'12:30–18:00（週三四休）',address:'台中市西區柳川東路二段56號',lat:24.1408,lng:120.6681,stars:5,builtin:true},
-  {id:3,name:'TokuToku matcha & coffee',tag:'抹茶',tags:['抹茶','日式','老宅','和菓子'],emoji:'🍵',desc:'由台灣與日本女孩共同打造的老屋抹茶專賣店。',price:'$150–$280',hours:'13:00–19:00（週三四休）',address:'台中市西區中興四巷13號',lat:24.1519,lng:120.6693,stars:5,builtin:true},
-  {id:4,name:'香緹果子咖啡館',tag:'千層蛋糕',tags:['千層蛋糕','法式','北區','質感'],emoji:'✨',desc:'網友強推台中最強千層蛋糕！紅烏龍千層夾滑順布丁。',price:'$200–$400',hours:'12:00–19:00',address:'台中市北區崇德路一段256巷1號',lat:24.1610,lng:120.6868,stars:5,builtin:true},
-  {id:5,name:'偷偷 Toutou Cuisine',tag:'創意甜點',tags:['創意甜點','玻璃屋','16宮格','特色'],emoji:'🪟',desc:'藏在巷弄中的玻璃屋甜點店，最知名的是 16 宮格甜點組合。',price:'$250–$450',hours:'12:30–20:00',address:'台中市西區精誠二街5號',lat:24.1528,lng:120.6558,stars:4,builtin:true},
-  {id:6,name:'可可庫奇甜點工坊',tag:'水果塔',tags:['水果塔','法式','中友商圈','季節限定'],emoji:'🫐',desc:'隱身在中友百貨巷弄內，以堆滿新鮮水果的法式水果塔最為知名。',price:'$160–$300',hours:'11:00–20:00（週二休）',address:'台中市北區三民路三段201巷7號',lat:24.1526,lng:120.6869,stars:4,builtin:true},
-  {id:7,name:'LIGAWA dessert 哩嘎哇',tag:'千層蛋糕',tags:['千層蛋糕','日式','老宅','手沖咖啡'],emoji:'🍃',desc:'50年老屋翻新成優雅日式咖啡廳。抹茶與焙茶千層餅皮濕潤散發茶香。',price:'$180–$320',hours:'11:00–18:00',address:'台中市東區精武路（精武車站旁）',lat:24.1439,lng:120.6975,stars:5,builtin:true},
-  {id:8,name:'花甜囍室',tag:'水果塔',tags:['水果塔','乳酪','戚風','北區'],emoji:'🌸',desc:'獨創「塔上戚風」在酥脆派皮上疊一層戚風蛋糕。',price:'$150–$280',hours:'11:00–19:00（週二休）',address:'台中市北區健行路958號',lat:24.1561,lng:120.6618,stars:4,builtin:true},
-  {id:9,name:'萊姆16手作甜點',tag:'千層蛋糕',tags:['千層蛋糕','抹茶','文青','巷弄'],emoji:'🍋',desc:'藏在北區天津一街小巷的秘密基地，抹茶千層蛋糕是抹茶控心頭好。',price:'$180–$350',hours:'12:00–20:00',address:'台中市北區天津一街42號',lat:24.1672,lng:120.6731,stars:4,builtin:true},
-  {id:10,name:'Supple Coffee',tag:'水果千層',tags:['水果千層','生乳捲','隱藏版','CP值'],emoji:'☕',desc:'水果千層是人氣第一，薄而有蛋香的餅皮搭配新鮮水果，滿滿餡料只要百元。',price:'$100–$200',hours:'11:00–19:00',address:'台中市南區文心南路901巷8號1樓',lat:24.1162,lng:120.6488,stars:4,builtin:true},
-  {id:11,name:'蜜柑 Citrus',tag:'法式甜點',tags:['法式甜點','藍帶','香檸','瑪德蓮'],emoji:'🍊',desc:'老闆赴法藍帶學習後開設。招牌香檸外層裹綠檸檬糖霜。',price:'$150–$350',hours:'12:00–19:00（週一休）',address:'台中市西區模範街31巷16號',lat:24.1478,lng:120.6642,stars:5,builtin:true},
-  {id:12,name:'法芙妮烘焙甜點',tag:'泡芙',tags:['泡芙','水果塔','可頌','平價'],emoji:'🥐',desc:'北海道牛奶泡芙一個才 $28，餡料濃郁厚實不甜膩。',price:'$50–$200',hours:'10:15–22:30',address:'台中市東區復興路四段186號1樓',lat:24.1368,lng:120.6892,stars:4,builtin:true},
-  {id:13,name:'Overture 序曲',tag:'千層蛋糕',tags:['千層蛋糕','塔類','麵包','多分店'],emoji:'🎂',desc:'千層蛋糕份量扎實，餅皮奶油水果比例恰到好處。',price:'$200–$400',hours:'11:00–21:00',address:'台中市北屯區太原路三段150巷8弄17號',lat:24.1643,lng:120.6971,stars:5,builtin:true},
-  {id:14,name:'BUTTER HOTEL 奶油飯店',tag:'伴手禮',tags:['伴手禮','奶油餅乾','打卡','法國奶油'],emoji:'🧈',desc:'每層樓獨特主題設計充滿戲劇感。使用法國 ÉCHIRÉ 頂級奶油製作。',price:'$180–$600',hours:'11:00–21:00',address:'台中市西區民生路358號',lat:24.1412,lng:120.6644,stars:4,builtin:true},
-  {id:15,name:'La Maison 梅笙蛋糕工作室',tag:'泡芙',tags:['泡芙','草莓蛋糕','預約制','高CP'],emoji:'🍓',desc:'法式聖多諾黑泡芙只要 $70 卻幾乎天天秒殺！只接受電話預訂。',price:'$70–$350',hours:'依電話預約',address:'台中市東區進德路154號',lat:24.1448,lng:120.6955,stars:5,builtin:true},
-  {id:16,name:'CJSJ 法式甜點概念店',tag:'法式',tags:['法式','慕斯','精品','西區'],emoji:'🧁',desc:'米其林三星主廚打造的高級法式甜點，造型精緻如藝術品，每日限量供應，是台中法式甜點界的頂級指標。',price:'$250–$500',hours:'12:00–18:30（週一休）',address:'台中市西區向上路一段79巷72號',lat:24.1458,lng:120.6624,stars:5,builtin:true},
-  {id:17,name:'creammm.t',tag:'伴手禮',tags:['伴手禮','檸檬塔','司康','西屯'],emoji:'🍋',desc:'傳說中要等半年的「玫瑰檸檬塔」始祖！酸甜完美平衡的滑順檸檬餡與酥脆塔皮讓人回味無窮，司康也極具水準。',price:'$500–$800(盒裝)',hours:'08:30–19:00（週末休）',address:'台中市西屯區朝馬二街18號',lat:24.1645,lng:120.6352,stars:5,builtin:true},
-  {id:18,name:'Fermento 發酵',tag:'水果塔',tags:['水果塔','法式','老宅','玻璃屋'],emoji:'🍓',desc:'隱身巷弄的老宅改建唯美玻璃屋，法式手工塔派選擇豐富，生乳酪與新鮮水果塔的搭配非常受歡迎，裝潢優雅好拍。',price:'$200–$400',hours:'11:00–19:00（週一休）',address:'台中市西區美村路一段102巷1號',lat:24.1507,lng:120.6601,stars:4,builtin:true},
-  {id:19,name:'兔子洞甜點工作室',tag:'生乳蛋糕',tags:['生乳蛋糕','戚風','童話風','下午茶'],emoji:'🎂',desc:'以愛麗絲夢遊仙境為主題的童話風格甜點店，經典招牌是各式戚風蛋糕與生乳捲，口感輕盈不甜膩，深受女孩喜愛。',price:'$150–$300',hours:'13:00–19:00（週一二休）',address:'台中市西區五權西一街127號',lat:24.1378,lng:120.6631,stars:4,builtin:true},
-  {id:20,name:'旅禾泡芙之家 (審計旗艦店)',tag:'泡芙',tags:['泡芙','伴手禮','審計新村','打卡'],emoji:'🥐',desc:'審計新村外的超人氣打卡店，門口有吸睛的巨大泡芙安全帽可以拍照。招牌摩艾石像麵包與平價爆漿泡芙是散步必買。',price:'$50–$150',hours:'10:00–19:00',address:'台中市西區民生路358號',lat:24.1419,lng:120.6634,stars:4,builtin:true},
-  {id:21,name:'讓一糖 檸檬蛋糕專賣店',tag:'伴手禮',tags:['伴手禮','檸檬蛋糕','南屯','超人氣'],emoji:'🍋',desc:'店面外觀掛著巨大立體檸檬非常吸睛！整間店只賣「檸檬蛋糕」一種品項，海綿蛋糕柔軟，淋上酸甜檸檬糖霜，清爽好吃。',price:'$480–$500',hours:'12:30–19:00（週日休）',address:'台中市南屯區黎明路二段892號',lat:24.1567,lng:120.6382,stars:5,builtin:true},
-  {id:22,name:'小麥菓子 Komugi',tag:'日式',tags:['日式','戚風','老宅','無油'],emoji:'🍵',desc:'隱密溫馨的日式木造甜點屋，招牌「無油戚風蛋糕」口感如雲朵般輕柔，搭配微甜生乳鮮奶油，吃起來毫無負擔。',price:'$150–$250',hours:'12:00–19:00（週一二休）',address:'台中市南屯區懷德街59巷6號',lat:24.1492,lng:120.6437,stars:5,builtin:true},
-  {id:23,name:'Kinber 金帛手製',tag:'創意甜點',tags:['創意甜點','生乳蛋糕','冰品','抹茶'],emoji:'富士山',desc:'創意日式冰淇淋與生乳捲專賣，把阿里山、富士山等風景包進生乳捲的切面中，視覺效果滿分，茶香系列尤其推薦。',price:'$200–$450',hours:'11:00–19:00',address:'台中市西區精誠五街14號',lat:24.1521,lng:120.6548,stars:4,builtin:true},
-  {id:24,name:'先生Sensei千層蛋糕',tag:'千層蛋糕',tags:['千層蛋糕','抹茶','質感','下午茶'],emoji:'🍰',desc:'來自南部的超人氣千層蛋糕，餅皮帶有微Q口感。抹茶口味嚴選丸久小山園，濃郁微苦，草莓季限定款更是大受歡迎。',price:'$180–$300',hours:'12:30–19:00（週二休）',address:'台中市西區五權七街53號',lat:24.1384,lng:120.6622,stars:4,builtin:true},
-  {id:25,name:'階段甜點',tag:'創意甜點',tags:['創意甜點','日式','老宅','文青'],emoji:'☕',desc:'老宅改建的文青甜點空間，保留了磨石子地板與復古窗花。提拉米蘇與伯爵茶戚風深受推崇，氛圍安靜慵懶。',price:'$150–$250',hours:'12:00–18:00（週三四休）',address:'台中市西區向上北路188巷12號',lat:24.1485,lng:120.6621,stars:5,builtin:true},
-  {id:26,name:'1%bakery',tag:'生乳蛋糕',tags:['乳酪蛋糕','伴手禮','草莓季','西區'],emoji:'🧀',desc:'以濃郁重乳酪蛋糕打響名號，選用台灣在地食材如大甲芋頭、屏東檸檬入餡，口感扎實綿密，是送禮的人氣選擇。',price:'$150–$300',hours:'12:00–20:30',address:'台中市西區公益路225號',lat:24.1505,lng:120.6585,stars:5,builtin:true},
-  {id:27,name:'小梗甜點咖啡 Terrier Sweets',tag:'法式甜點',tags:['法式甜點','寵物友善','千層','舒芙蕾'],emoji:'🐶',desc:'台中資深法式甜點名店，店內有兩隻可愛的梗犬。招牌「舒芙蕾」與各式精緻法式蛋糕水準極高，歷久不衰。',price:'$200–$400',hours:'12:00–19:00（週一休）',address:'台中市西區明義街52號',lat:24.1555,lng:120.6601,stars:5,builtin:true},
-  {id:28,name:'樂緹波兒手作塔派 La Petite Tarte',tag:'千層蛋糕',tags:['千層蛋糕','水果塔','南屯','純手工'],emoji:'🥧',desc:'隱身南屯的低調好店，千層蛋糕餅皮極薄，奶香濃郁卻不膩口，各式季節水果塔用料實在，CP 值相當高。',price:'$150–$250',hours:'11:00–19:00（週二休）',address:'台中市南屯區大墩十一街156號',lat:24.1481,lng:120.6482,stars:4,builtin:true},
-  {id:29,name:'法米法式甜點 La Famille',tag:'水果塔',tags:['水果塔','法式甜點','老字號','下午茶'],emoji:'🍋',desc:'從斗六紅到台中的經典法式甜點，招牌「老奶奶檸檬塔」酸度夠勁、塔皮酥脆，是許多台中人吃法式甜點的啟蒙店。',price:'$150–$350',hours:'11:00–19:00（週二休）',address:'台中市西區向上路一段79巷16號',lat:24.1455,lng:120.6621,stars:4,builtin:true},
-  {id:30,name:'2度C Ni Guo',tag:'千層蛋糕',tags:['千層蛋糕','伴手禮','外帶','平價'],emoji:'🍰',desc:'主打平價高CP值的千層蛋糕與彌月蛋糕，純手工製作超過30層的蛋皮，口感層次豐富，四片裝的綜合千層非常受歡迎。',price:'$110–$200',hours:'13:00–20:00（週一休）',address:'台中市南屯區公益路二段675號',lat:24.1501,lng:120.6341,stars:4,builtin:true},
-  {id:31,name:'柳川 や',tag:'日式甜點',tags:['星野菠蘿','麵包','日式','老宅'],emoji:'🥐',desc:'雖然是以星野菠蘿麵包聞名，但店內的日式鹽可頌與甜點麵包絕對不容錯過。老宅屋頂上有巨大的菠蘿麵包裝置藝術！',price:'$50–$150',hours:'12:00–18:00（週一二休）',address:'台中市西區模範街1巷13號',lat:24.1465,lng:120.6651,stars:5,builtin:true},
-  {id:32,name:'CV甜點沙龍',tag:'創意甜點',tags:['創意甜點','預約制','北屯','盤飾甜點'],emoji:'✨',desc:'北屯區的法式甜點秘境，提供高級餐廳等級的「盤飾甜點」。從視覺到味覺都充滿驚喜，強烈建議提早預約。',price:'$300–$600',hours:'11:30–19:30',address:'台中市北屯區遼寧路一段120號',lat:24.1721,lng:120.6951,stars:5,builtin:true},
-  {id:33,name:'常常手作',tag:'水果塔',tags:['塔類','常溫甜點','北屯','老屋'],emoji:'🌰',desc:'隱藏在北屯的溫馨小店，堅持使用天然食材，栗子塔與芝麻塔香氣濃郁不甜膩，充滿溫暖的手作感。',price:'$120–$220',hours:'12:00–18:00（週一二休）',address:'台中市北屯區建和路二段108號',lat:24.1681,lng:120.7251,stars:4,builtin:true},
-  {id:34,name:'順道菓子店',tag:'泡芙',tags:['泡芙','刨冰','日式','豐原'],emoji:'🍧',desc:'豐原超人氣日式菓子店！除了酥脆爆漿的現烤泡芙，夏天必吃的日式刨冰更是視覺與味覺的雙重享受。',price:'$80–$250',hours:'11:00–18:30',address:'台中市豐原區向陽路151巷18號',lat:24.2531,lng:120.7211,stars:5,builtin:true},
-  {id:35,name:'甜點心球',tag:'生乳蛋糕',tags:['草莓蛋糕','芙蓉蛋塔','東區','老字號'],emoji:'🍓',desc:'東區在地經營多年的名店，冬天限定的「草莓心型蛋糕」鋪滿浮誇的新鮮草莓，芙蓉蛋塔更是日常必買的秒殺商品。',price:'$100–$300',hours:'10:00–20:00（週日休）',address:'台中市東區自由路三段219號',lat:24.1432,lng:120.6945,stars:4,builtin:true},
-  {id:36,name:'狸小路手作烘焙',tag:'千層蛋糕',tags:['千層蛋糕','伴手禮','逢甲','平價'],emoji:'🍰',desc:'從台南紅到台中的知名千層蛋糕，主打親民價格與豐富口味，綜合千層是選擇困難症患者的福音，很適合外帶回家享用。',price:'$100–$250',hours:'10:00–21:00',address:'台中市西屯區河南路二段313號',lat:24.1682,lng:120.6435,stars:4,builtin:true},
-  {id:37,name:'橫濱洋菓子',tag:'泡芙',tags:['生乳捲','泡芙','北區','日式'],emoji:'🧁',desc:'老闆遠赴日本拜師學藝，招牌草莓生乳捲蛋糕體濕潤柔軟，鮮奶油清爽不膩口，脆皮泡芙也是回購率極高的品項。',price:'$120–$250',hours:'11:00–19:00（週一休）',address:'台中市北區育德路195號',lat:24.1585,lng:120.6711,stars:5,builtin:true},
-  {id:38,name:'Spirited Bakery',tag:'伴手禮',tags:['美式甜點','軟餅乾','紅絲絨','西區'],emoji:'🍪',desc:'少見的正宗美式甜點專賣店！招牌美式軟餅乾外酥內軟、風味濃郁，紅絲絨蛋糕更是許多外國人認證的家鄉味。',price:'$60–$150',hours:'12:00–20:00（週二三休）',address:'台中市西區五權西四街11號',lat:24.1375,lng:120.6625,stars:4,builtin:true},
-  {id:39,name:'若草 Wuakao',tag:'千層蛋糕',tags:['千層蛋糕','戚風','西區','隱密'],emoji:'🌿',desc:'沒有明顯招牌的隱密甜點店，氣氛寧靜。無花果戚風與各式水果千層深受熟客喜愛，鮮奶油處理得非常高級。',price:'$180–$280',hours:'12:30–18:30（週一二休）',address:'台中市西區模範街3巷22號',lat:24.1468,lng:120.6648,stars:4,builtin:true},
-  {id:40,name:'細水焙煎所',tag:'布丁',tags:['布丁','手沖咖啡','老宅','西區'],emoji:'🍮',desc:'雖然是咖啡館，但他們家的「焦糖布丁」被許多甜點控譽為神級！口感綿密扎實，苦甜焦糖香氣搭配手沖咖啡堪稱絕配。',price:'$100–$250',hours:'12:00–18:30',address:'台中市西區公正路231號',lat:24.1472,lng:120.6552,stars:5,builtin:true},
-];
+  {id:1,name:'蒔初甜點',tag:'千層蛋糕',tags:['千層蛋糕','水果千層','法式','文青'],emoji:'🍰',image:imgCrepe,desc:'台中必吃千層名店，清新文青裝潢帶有韓系咖啡廳氛圍。',price:'$200–$350',hours:'11:00–19:00',address:'台中市西區五權西六街69號',lat:24.1367,lng:120.6657,stars:5,builtin:true},
+  {id:2,name:'窩巷 Hidden Lane',tag:'生乳蛋糕',tags:['生乳蛋糕','水果蛋糕','柳川','網美'],emoji:'🌿',image:imgStrawberry,desc:'落腳在柳川旁，大面玻璃窗引進綠意。招牌迷你水果生乳蛋糕，宛如珠寶盒。',price:'$200–$350',hours:'12:30–18:00（週三四休）',address:'台中市西區柳川東路二段56號',lat:24.1408,lng:120.6681,stars:5,builtin:true},
+  {id:3,name:'TokuToku matcha & coffee',tag:'抹茶',tags:['抹茶','日式','老宅','和菓子'],emoji:'🍵',image:imgMatcha,desc:'由台灣與日本女孩共同打造的老屋抹茶專賣店。',price:'$150–$280',hours:'13:00–19:00（週三四休）',address:'台中市西區中興四巷13號',lat:24.1519,lng:120.6693,stars:5,builtin:true},
+  {id:4,name:'香緹果子咖啡館',tag:'千層蛋糕',tags:['千層蛋糕','法式','北區','質感'],emoji:'✨',image:imgCrepe,desc:'網友強推台中最強千層蛋糕！紅烏龍千層夾滑順布丁。',price:'$200–$400',hours:'12:00–19:00',address:'台中市北區崇德路一段256巷1號',lat:24.1610,lng:120.6868,stars:5,builtin:true},
+  {id:5,name:'偷偷 Toutou Cuisine',tag:'創意甜點',tags:['創意甜點','玻璃屋','16宮格','特色'],emoji:'🪟',image:imgFrench,desc:'藏在巷弄中的玻璃屋甜點店，最知名的是 16 宮格甜點組合。',price:'$250–$450',hours:'12:30–20:00',address:'台中市西區精誠二街5號',lat:24.1528,lng:120.6558,stars:4,builtin:true},
+  {id:6,name:'可可庫奇甜點工坊',tag:'水果塔',tags:['水果塔','法式','中友商圈','季節限定'],emoji:'🫐',image:imgTart,desc:'隱身在中友百貨巷弄內，以堆滿新鮮水果的法式水果塔最為知名。',price:'$160–$300',hours:'11:00–20:00（週二休）',address:'台中市北區三民路三段201巷7號',lat:24.1526,lng:120.6869,stars:4,builtin:true},
+  {id:7,name:'LIGAWA dessert 哩嘎哇',tag:'千層蛋糕',tags:['千層蛋糕','日式','老宅','手沖咖啡'],emoji:'🍃',image:imgCrepe,desc:'50年老屋翻新成優雅日式咖啡廳。抹茶與焙茶千層餅皮濕潤散發茶香。',price:'$180–$320',hours:'11:00–18:00',address:'台中市東區精武路（精武車站旁）',lat:24.1439,lng:120.6975,stars:5,builtin:true},
+  {id:8,name:'花甜囍室',tag:'水果塔',tags:['水果塔','乳酪','戚風','北區'],emoji:'🌸',image:imgTart,desc:'獨創「塔上戚風」在酥脆派皮上疊一層戚風蛋糕。',price:'$150–$280',hours:'11:00–19:00（週二休）',address:'台中市北區健行路958號',lat:24.1561,lng:120.6618,stars:4,builtin:true},
+  {id:9,name:'萊姆16手作甜點',tag:'千層蛋糕',tags:['千層蛋糕','抹茶','文青','巷弄'],emoji:'🍋',image:imgMatcha,desc:'藏在北區天津一街小巷的秘密基地，抹茶千層蛋糕是抹茶控心頭好。',price:'$180–$350',hours:'12:00–20:00',address:'台中市北區天津一街42號',lat:24.1672,lng:120.6731,stars:4,builtin:true},
+  {id:10,name:'Supple Coffee',tag:'水果千層',tags:['水果千層','生乳捲','隱藏版','CP值'],emoji:'☕',image:imgCrepe,desc:'水果千層是人氣第一，薄而有蛋香的餅皮搭配新鮮水果，滿滿餡料只要百元。',price:'$100–$200',hours:'11:00–19:00',address:'台中市南區文心南路901巷8號1樓',lat:24.1162,lng:120.6488,stars:4,builtin:true},
+  {id:11,name:'蜜柑 Citrus',tag:'法式甜點',tags:['法式甜點','藍帶','香檸','瑪德蓮'],emoji:'🍊',image:imgLemon,desc:'老闆赴法藍帶學習後開設。招牌香檸外層裹綠檸檬糖霜。',price:'$150–$350',hours:'12:00–19:00（週一休）',address:'台中市西區模範街31巷16號',lat:24.1478,lng:120.6642,stars:5,builtin:true},
+  {id:12,name:'法芙妮烘焙甜點',tag:'泡芙',tags:['泡芙','水果塔','可頌','平價'],emoji:'🥐',image:imgPuff,desc:'北海道牛奶泡芙一個才 $28，餡料濃郁厚實不甜膩。',price:'$50–$200',hours:'10:15–22:30',address:'台中市東區復興路四段186號1樓',lat:24.1368,lng:120.6892,stars:4,builtin:true},
+  {id:13,name:'Overture 序曲',tag:'千層蛋糕',tags:['千層蛋糕','塔類','麵包','多分店'],emoji:'🎂',image:imgCrepe,desc:'千層蛋糕份量扎實，餅皮奶油水果比例恰到好處。',price:'$200–$400',hours:'11:00–21:00',address:'台中市北屯區太原路三段150巷8弄17號',lat:24.1643,lng:120.6971,stars:5,builtin:true},
+  {id:14,name:'BUTTER HOTEL 奶油飯店',tag:'伴手禮',tags:['伴手禮','奶油餅乾','打卡','法國奶油'],emoji:'🧈',image:imgCookie,desc:'每層樓獨特主題設計充滿戲劇感。使用法國 ÉCHIRÉ 頂級奶油製作。',price:'$180–$600',hours:'11:00–21:00',address:'台中市西區民生路358號',lat:24.1412,lng:120.6644,stars:4,builtin:true},
+  {id:15,name:'La Maison 梅笙蛋糕工作室',tag:'泡芙',tags:['泡芙','草莓蛋糕','預約制','高CP'],emoji:'🍓',image:imgStrawberry,desc:'法式聖多諾黑泡芙只要 $70 卻幾乎天天秒殺！只接受電話預訂。',price:'$70–$350',hours:'依電話預約',address:'台中市東區進德路154號',lat:24.1448,lng:120.6955,stars:5,builtin:true},
+  {id:16,name:'CJSJ 法式甜點概念店',tag:'法式甜點',tags:['法式','慕斯','精品','西區'],emoji:'🧁',image:imgFrench,desc:'米其林三星主廚打造的高級法式甜點，造型精緻如藝術品，每日限量供應，是台中法式甜點界的頂級指標。',price:'$250–$500',hours:'12:00–18:30（週一休）',address:'台中市西區向上路一段79巷72號',lat:24.1458,lng:120.6624,stars:5,builtin:true},
+  {id:17,name:'creammm.t',tag:'伴手禮',tags:['伴手禮','檸檬塔','司康','西屯'],emoji:'🍋',image:imgLemon,desc:'傳說中要等半年的「玫瑰檸檬塔」始祖！酸甜完美平衡的滑順檸檬餡與酥脆塔皮讓人回味無窮，司康也極具水準。',price:'$500–$800(盒裝)',hours:'08:30–19:00（週末休）',address:'台中市西屯區朝馬二街18號',lat:24.1645,lng:120.6352,stars:5,builtin:true},
+  {id:18,name:'Fermento 發酵',tag:'水果塔',tags:['水果塔','法式','老宅','玻璃屋'],emoji:'🍓',image:imgTart,desc:'隱身巷弄的老宅改建唯美玻璃屋，法式手工塔派選擇豐富，生乳酪與新鮮水果塔的搭配非常受歡迎，裝潢優雅好拍。',price:'$200–$400',hours:'11:00–19:00（週一休）',address:'台中市西區美村路一段102巷1號',lat:24.1507,lng:120.6601,stars:4,builtin:true},
+  {id:19,name:'兔子洞甜點工作室',tag:'生乳蛋糕',tags:['生乳蛋糕','戚風','童話風','下午茶'],emoji:'🎂',image:imgCake,desc:'以愛麗絲夢遊仙境為主題的童話風格甜點店，經典招牌是各式戚風蛋糕與生乳捲，口感輕盈不甜膩，深受女孩喜愛。',price:'$150–$300',hours:'13:00–19:00（週一二休）',address:'台中市西區五權西一街127號',lat:24.1378,lng:120.6631,stars:4,builtin:true},
+  {id:20,name:'旅禾泡芙之家 (審計旗艦店)',tag:'泡芙',tags:['泡芙','伴手禮','審計新村','打卡'],emoji:'🥐',image:imgPuff,desc:'審計新村外的超人氣打卡店，門口有吸睛的巨大泡芙安全帽可以拍照。招牌摩艾石像麵包與平價爆漿泡芙是散步必買。',price:'$50–$150',hours:'10:00–19:00',address:'台中市西區民生路358號',lat:24.1419,lng:120.6634,stars:4,builtin:true},
+  {id:21,name:'讓一糖 檸檬蛋糕專賣店',tag:'伴手禮',tags:['伴手禮','檸檬蛋糕','南屯','超人氣'],emoji:'🍋',image:imgLemon,desc:'店面外觀掛著巨大立體檸檬非常吸睛！整間店只賣「檸檬蛋糕」一種品項，海綿蛋糕柔軟，淋上酸甜檸檬糖霜，清爽好吃。',price:'$480–$500',hours:'12:30–19:00（週日休）',address:'台中市南屯區黎明路二段892號',lat:24.1567,lng:120.6382,stars:5,builtin:true},
+  {id:22,name:'小麥菓子 Komugi',tag:'日式甜點',tags:['日式','戚風','老宅','無油'],emoji:'🍵',image:imgMatcha,desc:'隱密溫馨的日式木造甜點屋，招牌「無油戚風蛋糕」口感如雲朵般輕柔，搭配微甜生乳鮮奶油，吃起來毫無負擔。',price:'$150–$250',hours:'12:00–19:00（週一二休）',address:'台中市南屯區懷德街59巷6號',lat:24.1492,lng:120.6437,stars:5,builtin:true},
+  {id:23,name:'Kinber 金帛手製',tag:'創意甜點',tags:['創意甜點','生乳蛋糕','冰品','抹茶'],emoji:'富士山',image:imgIce,desc:'創意日式冰淇淋與生乳捲專賣，把阿里山、富士山等風景包進生乳捲的切面中，視覺效果滿分，茶香系列尤其推薦。',price:'$200–$450',hours:'11:00–19:00',address:'台中市西區精誠五街14號',lat:24.1521,lng:120.6548,stars:4,builtin:true},
+  {id:24,name:'先生Sensei千層蛋糕',tag:'千層蛋糕',tags:['千層蛋糕','抹茶','質感','下午茶'],emoji:'🍰',image:imgMatcha,desc:'來自南部的超人氣千層蛋糕，餅皮帶有微Q口感。抹茶口味嚴選丸久小山園，濃郁微苦，草莓季限定款更是大受歡迎。',price:'$180–$300',hours:'12:30–19:00（週二休）',address:'台中市西區五權七街53號',lat:24.1384,lng:120.6622,stars:4,builtin:true},
+  {id:25,name:'階段甜點',tag:'創意甜點',tags:['創意甜點','日式','老宅','文青'],emoji:'☕',image:imgCake,desc:'老宅改建的文青甜點空間，保留了磨石子地板與復古窗花。提拉米蘇與伯爵茶戚風深受推崇，氛圍安靜慵懶。',price:'$150–$250',hours:'12:00–18:00（週三四休）',address:'台中市西區向上北路188巷12號',lat:24.1485,lng:120.6621,stars:5,builtin:true},
+  {id:26,name:'1%bakery',tag:'生乳蛋糕',tags:['乳酪蛋糕','伴手禮','草莓季','西區'],emoji:'🧀',image:imgStrawberry,desc:'以濃郁重乳酪蛋糕打響名號，選用台灣在地食材如大甲芋頭、屏東檸檬入餡，口感扎實綿密，是送禮的人氣選擇。',price:'$150–$300',hours:'12:00–20:30',address:'台中市西區公益路225號',lat:24.1505,lng:120.6585,stars:5,builtin:true},
+  {id:27,name:'小梗甜點咖啡 Terrier Sweets',tag:'法式甜點',tags:['法式甜點','寵物友善','千層','舒芙蕾'],emoji:'🐶',image:imgFrench,desc:'台中資深法式甜點名店，店內有兩隻可愛的梗犬。招牌「舒芙蕾」與各式精緻法式蛋糕水準極高，歷久不衰。',price:'$200–$400',hours:'12:00–19:00（週一休）',address:'台中市西區明義街52號',lat:24.1555,lng:120.6601,stars:5,builtin:true},
+  {id:28,name:'樂緹波兒手作塔派 La Petite Tarte',tag:'千層蛋糕',tags:['千層蛋糕','水果塔','南屯','純手工'],emoji:'🥧',image:imgCrepe,desc:'隱身南屯的低調好店，千層蛋糕餅皮極薄，奶香濃郁卻不膩口，各式季節水果塔用料實在，CP 值相當高。',price:'$150–$250',hours:'11:00–19:00（週二休）',address:'台中市南屯區大墩十一街156號',lat:24.1481,lng:120.6482,stars:4,builtin:true},
+  {id:29,name:'法米法式甜點 La Famille',tag:'水果塔',tags:['水果塔','法式甜點','老字號','下午茶'],emoji:'🍋',image:imgLemon,desc:'從斗六紅到台中的經典法式甜點，招牌「老奶奶檸檬塔」酸度夠勁、塔皮酥脆，是許多台中人吃法式甜點的啟蒙店。',price:'$150–$350',hours:'11:00–19:00（週二休）',address:'台中市西區向上路一段79巷16號',lat:24.1455,lng:120.6621,stars:4,builtin:true},
+  {id:30,name:'2度C Ni Guo',tag:'千層蛋糕',tags:['千層蛋糕','伴手禮','外帶','平價'],emoji:'🍰',image:imgCrepe,desc:'主打平價高CP值的千層蛋糕與彌月蛋糕，純手工製作超過30層的蛋皮，口感層次豐富，四片裝的綜合千層非常受歡迎。',price:'$110–$200',hours:'13:00–20:00（週一休）',address:'台中市南屯區公益路二段675號',lat:24.1501,lng:120.6341,stars:4,builtin:true},
+  {id:31,name:'柳川 や',tag:'日式甜點',tags:['星野菠蘿','麵包','日式','老宅'],emoji:'🥐',image:imgPuff,desc:'雖然是以星野菠蘿麵包聞名，但店內的日式鹽可頌與甜點麵包絕對不容錯過。老宅屋頂上有巨大的菠蘿麵包裝置藝術！',price:'$50–$150',hours:'12:00–18:00（週一二休）',address:'台中市西區模範街1巷13號',lat:24.1465,lng:120.6651,stars:5,builtin:true},
+  {id:32,name:'CV甜點沙龍',tag:'創意甜點',tags:['創意甜點','預約制','北屯','盤飾甜點'],emoji:'✨',image:imgFrench,desc:'北屯區的法式甜點秘境，提供高級餐廳等級的「盤飾甜點」。從視覺到味覺都充滿驚喜，強烈建議提早預約。',price:'$300–$600',hours:'11:30–19:30',address:'台中市北屯區遼寧路一段120號',lat:24.1721,lng:120.6951,stars:5,builtin:true},
+  {id:33,name:'常常手作',tag:'水果塔',tags:['塔類','常溫甜點','北屯','老屋'],emoji:'🌰',image:imgTart,desc:'隱藏在北屯的溫馨小店，堅持使用天然食材，栗子塔與芝麻塔香氣濃郁不甜膩，充滿溫暖的手作感。',price:'$120–$220',hours:'12:00–18:00（週一二休）',address:'台中市北屯區建和路二段108號',lat:24.1681,lng:120.7251,stars:4,builtin:true},
+  {id:34,name:'順道菓子店',tag:'泡芙',tags:['泡芙','刨冰','日式','豐原'],emoji:'🍧',image:imgIce,desc:'豐原超人氣日式菓子店！除了酥脆爆漿的現烤泡芙，夏天必吃的日式刨冰更是視覺與味覺的雙重享受。',price:'$80–$250',hours:'11:00–18:30',address:'台中市豐原區向陽路151巷18號',lat:24.2531,lng:120.7211,stars:5,builtin:true},
+  {id:35,name:'甜點心球',tag:'生乳蛋糕',tags:['草莓蛋糕','芙蓉蛋塔','東區','老字號'],emoji:'🍓',image:imgStrawberry,desc:'東區在地經營多年的名店，冬天限定的「草莓心型蛋糕」鋪滿浮誇的新鮮草莓，芙蓉蛋塔更是日常必買的秒殺商品。',price:'$100–$300',hours:'10:00–20:00（週日休）',address:'台中市東區自由路三段219號',lat:24.1432,lng:120.6945,stars:4,builtin:true},
+  {id:36,name:'狸小路手作烘焙',tag:'千層蛋糕',tags:['千層蛋糕','伴手禮','逢甲','平價'],emoji:'🍰',image:imgCrepe,desc:'從台南紅到台中的知名千層蛋糕，主打親民價格與豐富口味，綜合千層是選擇困難症患者的福音，很適合外帶回家享用。',price:'$100–$250',hours:'10:00–21:00',address:'台中市西屯區河南路二段313號',lat:24.1682,lng:120.6435,stars:4,builtin:true},
+  {id:37,name:'橫濱洋菓子',tag:'泡芙',tags:['生乳捲','泡芙','北區','日式'],emoji:'🧁',image:imgCake,desc:'老闆遠赴日本拜師學藝，招牌草莓生乳捲蛋糕體濕潤柔軟，鮮奶油清爽不膩口，脆皮泡芙也是回購率極高的品項。',price:'$120–$250',hours:'11:00–19:00（週一休）',address:'台中市北區育德路195號',lat:24.1585,lng:120.6711,stars:5,builtin:true},
+  {id:38,name:'Spirited Bakery',tag:'伴手禮',tags:['美式甜點','軟餅乾','紅絲絨','西區'],emoji:'🍪',image:imgCookie,desc:'少見的正宗美式甜點專賣店！招牌美式軟餅乾外酥內軟、風味濃郁，紅絲絨蛋糕更是許多外國人認證的家鄉味。',price:'$60–$150',hours:'12:00–20:00（週二三休）',address:'台中市西區五權西四街11號',lat:24.1375,lng:120.6625,stars:4,builtin:true},
+  {id:39,name:'若草 Wuakao',tag:'千層蛋糕',tags:['千層蛋糕','戚風','西區','隱密'],emoji:'🌿',image:imgCrepe,desc:'沒有明顯招牌的隱密甜點店，氣氛寧靜。無花果戚風與各式水果千層深受熟客喜愛，鮮奶油處理得非常高級。',price:'$180–$280',hours:'12:30–18:30（週一二休）',address:'台中市西區模範街3巷22號',lat:24.1468,lng:120.6648,stars:4,builtin:true},
+  {id:40,name:'細水焙煎所',tag:'布丁',tags:['布丁','手沖咖啡','老宅','西區'],emoji:'🍮',image:imgPudding,desc:'雖然是咖啡館，但他們家的「焦糖布丁」被許多甜點控譽為神級！口感綿密扎實，苦甜焦糖香氣搭配手沖咖啡堪稱絕配。',price:'$100–$250',hours:'12:00–18:30',address:'台中市西區公正路231號',lat:24.1472,lng:120.6552,stars:5,builtin:true},
+].map(shop => ({ ...shop, id: 'b' + shop.id }));
 
 // ═══════════════════ STATE & LEAFLET MAP ═══════════════════
 let shops=[];
@@ -364,38 +359,33 @@ async function load(){
     favs = new Set();
   }
   renderHome();
-  if(map) updateMapMarkers(); // 若地圖已載入，同步更新圖標
+  if(map) updateMapMarkers();
 }
 
 function saveFavs(){localStorage.setItem('ds_favs',JSON.stringify([...favs]));}
 
-// ═══════════════════ MAP INITIALIZATION ═══════════════════
 function initMap() {
   if(map) return;
-  // 初始化地圖，中心點設為勤美誠品附近
   map = L.map('mainMap', { zoomControl: false }).setView([24.151, 120.664], 14);
-  
-  // 使用高顏值淺色底圖 (CartoDB Positron/Voyager)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19
-  }).addTo(map);
-
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
   updateMapMarkers();
 }
 
 function updateMapMarkers() {
   if(!map) return;
-  // 清除舊圖標
   mapMarkers.forEach(m => map.removeLayer(m));
   mapMarkers = [];
 
   shops.forEach(s => {
     if(!s.lat || !s.lng) return;
+    const bgStyle = s.image ? `background-image: url('${s.image}'); background-color: #eee;` : '';
+    const content = s.image ? '' : (s.emoji || '🍰');
+    
     const icon = L.divIcon({
       className: 'custom-leaflet-icon',
-      html: `<div class="custom-marker">${s.emoji || '🍰'}</div>`,
+      html: `<div class="custom-marker" style="${bgStyle}">${content}</div>`,
       iconSize: [36, 36],
-      iconAnchor: [18, 36] // 圖標底部對齊座標
+      iconAnchor: [18, 36]
     });
     const marker = L.marker([s.lat, s.lng], {icon: icon}).addTo(map);
     marker.on('click', () => openSheet(s.id));
@@ -423,7 +413,6 @@ function switchTab(t){
   if(t==='map'){
     renderMapStrip();
     if(!map) initMap();
-    // 解決 Leaflet 在隱藏 DIV 初始化的破圖問題
     setTimeout(() => map.invalidateSize(), 300);
   }
 }
@@ -453,8 +442,14 @@ function getFiltered(q=''){
 
 function cardHTML(s){
   const fav=favs.has(s.id);
+  const bgStyle = s.image ? `background-image: url('${s.image}'); background-color: #eee;` : `background: linear-gradient(135deg, var(--gold-light), var(--rose-light));`;
+  const content = s.image ? '' : (s.emoji || '🍰');
+
   return `<div class="shop-card" id="sc-${s.id}" onclick="openSheet('${s.id}')">
-    <div class="card-left">${s.emoji||'🍰'}${!s.builtin?'<div class="user-badge">大家新增</div>':''}</div>
+    <div class="card-left" style="${bgStyle}">
+      ${content}
+      ${!s.builtin?'<div class="user-badge">大家新增</div>':''}
+    </div>
     <div class="card-body">
       <div class="card-name">${s.name}</div>
       <div class="card-tag">${s.tag}</div>
@@ -489,13 +484,17 @@ function renderFavs(){
 }
 
 function renderMapStrip(){
-  document.getElementById('mapStrip').innerHTML=shops.map(s=>`
+  document.getElementById('mapStrip').innerHTML=shops.map(s=>{
+    const bgStyle = s.image ? `background-image: url('${s.image}'); background-color: #eee;` : `background: linear-gradient(135deg, var(--gold-light), var(--rose-light));`;
+    const content = s.image ? '' : (s.emoji || '🍰');
+    return `
     <div class="map-mini" onclick="panMapTo('${s.id}'); openSheet('${s.id}');">
-      <div class="mm-em">${s.emoji||'🍰'}</div>
+      <div class="mm-em" style="${bgStyle}">${content}</div>
       <div class="mm-name">${s.name}</div>
       <div class="mm-addr">${s.address||''}</div>
       <div class="mm-btn" style="pointer-events:none">在地圖上查看 📍</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ═══════════════════ FAVORITES ═══════════════════
@@ -518,8 +517,13 @@ function openSheet(id){
   const s=shops.find(x=>String(x.id)===String(id));if(!s)return;
   const isFav=favs.has(s.id);
   const stars='★'.repeat(s.stars||3)+'☆'.repeat(5-(s.stars||3));
+  
+  const bgStyle = s.image ? `background-image: url('${s.image}'); background-color: #eee;` : `background: linear-gradient(135deg, var(--gold-light), var(--rose-light));`;
+  const content = s.image ? '' : (s.emoji || '🍰');
+
   document.getElementById('sheetBody').innerHTML=`
-    <div class="sheet-hero">${s.emoji||'🍰'}
+    <div class="sheet-hero" style="${bgStyle}">
+      ${content}
       <button id="shFav" data-id="${s.id}" class="sh-fav" onclick="toggleFav(event,'${s.id}')">${isFav?'❤️':'🤍'}</button>
     </div>
     <div class="sh-body">
@@ -576,16 +580,22 @@ function onSearch(inp){
 function showDrop(q){
   const res=getFiltered(q).slice(0,8);
   const el=document.getElementById('searchDrop');
+  
   el.innerHTML=!res.length
     ?`<div style="padding:18px;text-align:center;color:var(--text-muted);font-size:13px;">🔍 找不到「${q}」相關店家</div>`
-    :res.map(s=>`<div class="sri" onclick="openSheet('${s.id}');hideDrop();">
-        <div class="sri-em">${s.emoji||'🍰'}</div>
+    :res.map(s=>{
+        const bgStyle = s.image ? `background-image: url('${s.image}'); background-color: #eee;` : `background: linear-gradient(135deg, var(--gold-light), var(--rose-light));`;
+        const content = s.image ? '' : (s.emoji || '🍰');
+        return `
+      <div class="sri" onclick="openSheet('${s.id}');hideDrop();">
+        <div class="sri-em" style="${bgStyle}">${content}</div>
         <div class="sri-info">
           <div class="sri-name">${hl(s.name,q)}</div>
           <div class="sri-addr">${s.address||''}</div>
         </div>
         <span class="sri-tag">${s.tag}</span>
-      </div>`).join('');
+      </div>`
+    }).join('');
   el.classList.add('show');
 }
 function hl(t,q){return t.replace(new RegExp(q,'gi'),m=>`<mark style="background:var(--gold-light);color:var(--brown);border-radius:3px;">${m}</mark>`);}
@@ -598,11 +608,17 @@ function clearSearch(){
   hideDrop();renderHome();
 }
 
-// ═══════════════════ ADD FORM ═══════════════════
+// ═══════════════════ ADD FORM & UPLOAD ═══════════════════
 function openForm(){
   document.getElementById('formOv').classList.add('open');
   ['f-name','f-desc','f-price','f-hours','f-addr'].forEach(id=>document.getElementById(id).value='');
   setStar(3);selectEmoji('🍰');
+  
+  // 重置圖片預覽
+  document.getElementById('f-img').value = '';
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('img-preview').src = '';
+  document.getElementById('file-label').style.display = 'block';
 }
 function closeForm(){document.getElementById('formOv').classList.remove('open');}
 function formOvClick(e){if(e.target===document.getElementById('formOv'))closeForm();}
@@ -619,30 +635,61 @@ function buildEmGrid(){
   document.getElementById('emGrid').innerHTML=EMOJIS.map(e=>`<button class="em-opt${e===fEmoji?' sel':''}" data-e="${e}" onclick="selectEmoji('${e}')">${e}</button>`).join('');
 }
 
-// 自動將地址轉為經緯度的功能 (免費 API)
+// 預覽圖片
+function previewImage(input) {
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('img-preview').src = e.target.result;
+      document.getElementById('img-preview').style.display = 'block';
+      document.getElementById('file-label').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// 自動將地址轉為經緯度
 async function fetchCoordinates(address) {
   try {
     const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ' 台中')}`);
     const data = await res.json();
     if(data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
   } catch(e) {}
-  // 如果找不到，就隨機放在台中火車站附近，避免全部疊在一起
   return { lat: 24.1368 + (Math.random()-0.5)*0.02, lng: 120.685 + (Math.random()-0.5)*0.02 };
 }
 
 async function submitShop(){
   const name=document.getElementById('f-name').value.trim();
   const addr=document.getElementById('f-addr').value.trim();
+  const file=document.getElementById('f-img').files[0];
+  
   if(!name){toast('請填寫店名！');return;}
   if(!addr){toast('請填寫地址！');return;}
   
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = '定位並上傳中...';
+  btn.textContent = '圖片上傳與定位中...';
 
-  // 取得經緯度
+  let imageUrl = null;
+  // 1. 如果有選擇照片，上傳到 Supabase Storage
+  if (file) {
+    const fileName = `${Date.now()}_${file.name}`;
+    const { data: uploadData, error: uploadError } = await db.storage.from('images').upload(fileName, file);
+    
+    if (!uploadError) {
+      const { data: urlData } = db.storage.from('images').getPublicUrl(fileName);
+      imageUrl = urlData.publicUrl;
+    } else {
+      console.error('圖片上傳失敗', uploadError);
+      toast('圖片上傳失敗，僅儲存文字資訊');
+    }
+  }
+
+  // 2. 取得經緯度
   const coords = await fetchCoordinates(addr);
 
+  // 3. 準備寫入資料庫
   const newShop = {
     name: name,
     tag: document.getElementById('f-tag').value,
@@ -652,8 +699,9 @@ async function submitShop(){
     address: addr,
     emoji: fEmoji,
     stars: fStars,
-    lat: coords.lat,  // 存入 Supabase (你需要去資料庫新增這兩個欄位！)
-    lng: coords.lng
+    lat: coords.lat,
+    lng: coords.lng,
+    image: imageUrl  // 寫入圖片網址
   };
 
   try {
@@ -665,21 +713,20 @@ async function submitShop(){
     await load();
   } catch (err) {
     console.error('新增失敗:', err);
-    toast('新增失敗，請檢查欄位格式！ 😢');
+    toast('新增失敗，請檢查網路或欄位格式！ 😢');
   } finally {
     btn.disabled = false;
-    btn.textContent = '✦ 新增到地圖';
+    btn.textContent = '✦ 新增並上傳';
   }
 }
 
-// ═══════════════════ TOAST ═══════════════════
+// ═══════════════════ TOAST & INIT ═══════════════════
 let tTimer;
 function toast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(tTimer);tTimer=setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-// ═══════════════════ INIT ═══════════════════
 async function init() {
   buildChips();
   buildEmGrid();
